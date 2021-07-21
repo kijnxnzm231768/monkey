@@ -1,11 +1,14 @@
 package models
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 //SysMenu 菜单结构体
 type SysMenu struct {
-	MenuId     int64     `xorm:"pk autoincr" json:"menuId"`     //主键Id
-	ParentId   int64     `json:"parentId"`                      //父Id
+	MenuId     int       `xorm:"pk autoincr" json:"menuId"`     //主键Id
+	ParentId   int       `json:"parentId"`                      //父Id
 	MenuName   string    `xorm:"varchar(128)" json:"menuName"`  //菜单名称
 	OrderNum   int       `xorm:"int" json:"orderNum"`           //显示顺序
 	Path       string    `xorm:"varchar(200)" json:"path"`      //请求路径
@@ -27,4 +30,23 @@ type SysMenu struct {
 
 func (SysMenu) TableName() string {
 	return "sys_menu"
+}
+func (s SysMenu) GetPath() string {
+	return s.Path
+}
+func (s SysMenu) GetName() string {
+	return strings.Title(s.Path)
+}
+func (s SysMenu) GetMenuId() int {
+	return s.MenuId
+}
+func (s SysMenu) GetParentId() int {
+	return s.ParentId
+}
+func (s SysMenu) GetData() interface{} {
+	return s
+}
+func (s SysMenu) IsRoot() bool {
+	// 这里通过FatherId等于0 或者 FatherId等于自身Id表示顶层根节点
+	return s.ParentId == 0 || s.ParentId == s.MenuId
 }

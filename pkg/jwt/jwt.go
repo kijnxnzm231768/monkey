@@ -32,6 +32,14 @@ func JWTAuth() gin.HandlerFunc {
 		j := NewJWT()
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(s[1])
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"status": 401,
+				"msg":    err.Error(),
+			})
+			c.Abort()
+			return
+		}
 		appServer := config.GetServerCfg()
 		lock := appServer.Lock
 		if lock == "0" {

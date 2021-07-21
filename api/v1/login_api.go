@@ -3,6 +3,8 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models/request"
+	"monkey-admin/pkg/library/tree/tree_menu"
+	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
 )
@@ -21,6 +23,8 @@ func (a LoginApi) Login(c *gin.Context) {
 		m := make(map[string]string)
 		login, s := a.loginService.Login(loginBody.UserName, loginBody.Password)
 		if login {
+			//将token存入到redis中
+			user_util.SaveRedisToken(loginBody.UserName, s)
 			m["token"] = s
 			c.JSON(200, resp.Success(m))
 		} else {
@@ -50,5 +54,9 @@ func (a LoginApi) GetRouters(c *gin.Context) {
 	//获取等钱登录用户
 	user := a.loginService.LoginUser(c)
 	menus := a.menuService.GetMenuTreeByUserId(user)
-	c.JSON(200, resp.Success(menus))
+	systemMenus := tree_menu.SystemMenus{}
+	systemMenus = *menus
+	array := systemMenus.ConvertToINodeArray(menus)
+	generateTree := tree_menu.GenerateTree(array, nil)
+	c.JSON(200, resp.Success(generateTree))
 }

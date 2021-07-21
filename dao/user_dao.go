@@ -42,10 +42,10 @@ func (d UserDao) Find(query request.UserQuery) ([]*response.UserResponse, int64)
 		sql.And("date_format(u.create_time,'%y%m%d') &lt;= date_format(?,'%y%m%d')", timestamp)
 	}
 	if query.DeptId > 0 {
-		sql.And("(u.dept_id = ? OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(?, ancestors)))", query.DeptId)
+		sql.And("u.dept_id = ? OR u.dept_id in ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(?, ancestors))", query.DeptId, query.DeptId)
 	}
 	total, _ := page.GetTotal(sql.Clone())
-	err := sql.Limit(query.Size, page.StartSize(query.PageNum, query.Size)).Find(&resp)
+	err := sql.Limit(query.PageSize, page.StartSize(query.PageNum, query.PageSize)).Find(&resp)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
 		return nil, 0

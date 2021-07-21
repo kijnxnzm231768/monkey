@@ -48,7 +48,7 @@ func (d RoleDao) SelectRoleList(q *request.RoleQuery) ([]*models.SysRole, int64)
 		session.And("date_format(r.create_time,'%y%m%d') &lt;= date_format(?,'%y%m%d')", timestamp)
 	}
 	total, _ := page.GetTotal(session.Clone())
-	err := session.Limit(q.Size, page.StartSize(q.PageNum, q.Size)).Find(&roles)
+	err := session.Limit(q.PageSize, page.StartSize(q.PageNum, q.PageSize)).Find(&roles)
 	if err != nil {
 		return nil, 0
 	}

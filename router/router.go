@@ -21,6 +21,8 @@ func Init() *gin.Engine {
 		initLoginRouter(v1Router)
 		//用户路由接口
 		initUserRouter(v1Router)
+		//部门路由注册
+		initDeptRouter(v1Router)
 	}
 	return router
 }

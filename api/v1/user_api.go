@@ -25,7 +25,7 @@ func (a UserApi) Find(c *gin.Context) {
 	if c.BindQuery(&query) == nil {
 		list, i := a.userService.FindList(query)
 		success := resp.Success(page.Page{
-			Size:  query.Size,
+			Size:  query.PageSize,
 			Total: i,
 			List:  list,
 		}, "查询成功")

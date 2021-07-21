@@ -15,5 +15,5 @@ type GlobalQuery struct {
 	BeginTime string `form:"beginTime"` //开始时间
 	EndTime   string `form:"endTime"`   //结束时间
 	PageNum   int    `form:"pageNum"`   //当前页码
-	Size      int    `form:"size"`      //显示条数
+	PageSize  int    `form:"pageSize"`  //显示条数
 }
