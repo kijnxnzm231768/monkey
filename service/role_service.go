@@ -23,3 +23,8 @@ func (s RoleService) SelectRoleAll(query *request.RoleQuery) ([]*models.SysRole,
 func (s RoleService) SelectRoleListByUserId(parseInt int64) *[]int64 {
 	return s.roleDao.SelectRoleListByUserId(parseInt)
 }
+
+// GetRoleListByUserId 根据用户ID查询角色
+func (s RoleService) GetRoleListByUserId(id int64) *[]models.SysRole {
+	return s.roleDao.GetRoleListByUserId(id)
+}

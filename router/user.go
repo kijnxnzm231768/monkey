@@ -13,5 +13,6 @@ func initUserRouter(router *gin.RouterGroup) {
 		userRouter.GET("/list", userApi.Find)
 		userRouter.GET("/getInfo/:userId", userApi.GetInfo)
 		userRouter.GET("/getInfo", userApi.GetInfo)
+		userRouter.GET("/authRole/:userId", userApi.AuthRole)
 	}
 }

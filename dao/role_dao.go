@@ -89,3 +89,14 @@ func (d RoleDao) GetRolePermissionByUserId(id int64) *[]string {
 	}
 	return &roleKeys
 }
+
+// GetRoleListByUserId 根据用户ID查询角色
+func (d RoleDao) GetRoleListByUserId(id int64) *[]models.SysRole {
+	roles := make([]models.SysRole, 0)
+	err := d.sqlSelectJoin().Where("r.del_flag = '0'").And("ur.user_id = ?", id).Find(&roles)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &roles
+}

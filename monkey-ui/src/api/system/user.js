@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { praseStrEmpty } from "@/utils/ruoyi";
+import { praseStrEmpty } from '@/utils/ruoyi'
 
 // 查询用户列表
 export function listUser(query) {
@@ -12,8 +12,12 @@ export function listUser(query) {
 
 // 查询用户详细
 export function getUser(userId) {
+  let url = '/api/v1/user/getInfo'
+  if (userId) {
+    url = url + '/' + praseStrEmpty(userId)
+  }
   return request({
-    url: '/api/v1/user/getInfo/' + praseStrEmpty(userId),
+    url: url,
     method: 'get'
   })
 }
@@ -129,7 +133,7 @@ export function importTemplate() {
 // 查询授权角色
 export function getAuthRole(userId) {
   return request({
-    url: '/system/user/authRole/' + userId,
+    url: '/api/v1/user/authRole/' + userId,
     method: 'get'
   })
 }

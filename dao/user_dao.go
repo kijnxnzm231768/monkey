@@ -34,12 +34,10 @@ func (d UserDao) Find(query request.UserQuery) ([]*response.UserResponse, int64)
 		sql.And("u.phone_number like concat('%',?,'%')", query.PhoneNumber)
 	}
 	if !gotool.StrUtils.HasEmpty(query.BeginTime) {
-		timestamp, _ := gotool.DateUtil.InterpretStringToTimestamp(query.BeginTime, "YYYY-MM-DD  hh:mm:ss")
-		sql.And("date_format(u.create_time,'%y%m%d') &gt;= date_format(?,'%y%m%d')", timestamp)
+		sql.And("date_format(u.create_time,'%y%m%d') >= date_format(?,'%y%m%d')", query.BeginTime)
 	}
 	if !gotool.StrUtils.HasEmpty(query.EndTime) {
-		timestamp, _ := gotool.DateUtil.InterpretStringToTimestamp(query.EndTime, "YYYY-MM-DD  hh:mm:ss")
-		sql.And("date_format(u.create_time,'%y%m%d') &lt;= date_format(?,'%y%m%d')", timestamp)
+		sql.And("date_format(u.create_time,'%y%m%d') <= date_format(?,'%y%m%d')", query.EndTime)
 	}
 	if query.DeptId > 0 {
 		sql.And("u.dept_id = ? OR u.dept_id in ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(?, ancestors))", query.DeptId, query.DeptId)

@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" />
 
     <el-form label-width="100px">
@@ -71,8 +71,9 @@ export default {
     if (userId) {
       this.loading = true;
       getAuthRole(userId).then((response) => {
-        this.form = response.user;
-        this.roles = response.roles;
+        let data = response.data
+        this.form = data.user;
+        this.roles = data.roles;
         this.total = this.roles.length;
         this.$nextTick(() => {
           this.roles.forEach((row) => {

@@ -582,8 +582,9 @@ export default {
       this.reset();
       this.getTreeselect();
       getUser().then(response => {
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
+        let data = response.data
+        this.postOptions = data.posts;
+        this.roleOptions = data.roles;
         this.open = true;
         this.title = "添加用户";
         this.form.password = this.initPassword;

@@ -80,3 +80,31 @@ func (a UserApi) GetInfo(c *gin.Context) {
 	r.Posts = postAll
 	c.JSON(200, resp.Success(r, "操作成功"))
 }
+
+// AuthRole 根据用户编号获取授权角色
+func (a UserApi) AuthRole(c *gin.Context) {
+	m := make(map[string]interface{})
+	userId := c.Param("userId")
+	parseInt, err := strconv.ParseInt(userId, 10, 64)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		c.JSON(500, resp.ErrorResp(err))
+	}
+	user := a.userService.GetUserById(parseInt)
+	//查询角色
+	roles := a.roleService.GetRoleListByUserId(parseInt)
+	flag := models.SysUser{}.IsAdmin(parseInt)
+	if flag {
+		m["roles"] = roles
+	} else {
+		roleList := make([]models.SysRole, 0)
+		for _, role := range *roles {
+			if role.RoleId != 1 {
+				roleList = append(roleList, role)
+			}
+		}
+		m["roles"] = roleList
+	}
+	m["user"] = user
+	c.JSON(200, resp.Success(m))
+}
