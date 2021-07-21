@@ -1,10 +1,12 @@
 package dao
 
 import (
+	"github.com/druidcaesa/gotool"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"log"
 	"monkey-admin/config"
+	"monkey-admin/models"
 	"monkey-admin/pkg/common"
 	redisTool "monkey-admin/pkg/redistool"
 	"time"
@@ -12,8 +14,6 @@ import (
 
 // X 全局DB
 var (
-	//MongoSession *mgo.Session
-	//MongoDB      *mgo.DialInfo
 	SqlDB   *xorm.Engine
 	RedisDB *redisTool.RedisClient
 )
@@ -61,17 +61,41 @@ func init() {
 
 	RedisDB = redisTool.NewRedis(redisOpt)
 	//配置redis结束
-	// 配置Mongo
-	//mongoCfg := config.GetMongoCfg()
-	//uri := "mongodb://" + mongoCfg.User + ":" + mongoCfg.Password + "@" + mongoCfg.Url + ":" + mongoCfg.Port + "/" + mongoCfg.DB + ""
-	//MongoDB, err = mgo.ParseURL(uri)
-	//MongoSession, err = mgo.Dial(uri)
-	//if err != nil {
-	//	fmt.Printf("Can't connect to mongo, go error %v\n", err)
-	//	panic(err.Error())
-	//}
-	//MongoSession.SetSafe(&mgo.Safe{})
+	//缓存初始化数据
+	saveCache()
+}
 
-	//进行缓存数据存贮
-	//saveCache()
+//初始化缓存数据
+func saveCache() {
+	initDict()
+	initConfig()
+}
+
+func initDict() {
+	//查询字典类型数据
+	dictTypeDao := new(DictTypeDao)
+	typeAll := dictTypeDao.FindAll()
+	//查询所有字典数据
+	d := new(DictDataDao)
+	m := new(models.SysDictData)
+	for _, dictType := range typeAll {
+		byType := d.GetByType(dictType.DictType)
+		RedisDB.SET(dictType.DictType, m.MarshalDictList(byType))
+	}
+}
+
+func initConfig() {
+	//查询配置数据存入到缓存中
+	configDao := new(ConfigDao)
+	configSession := configDao.sql(SqlDB.NewSession())
+	configs := make([]*models.SysConfig, 0)
+	err := configSession.Find(&configs)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return
+	}
+	m2 := new(models.SysConfig)
+	for _, sysConfig := range configs {
+		RedisDB.SET(sysConfig.ConfigKey, m2.MarshalDictObj(*sysConfig))
+	}
 }

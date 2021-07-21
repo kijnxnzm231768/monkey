@@ -1,6 +1,8 @@
 package models
 
 import (
+	"encoding/json"
+	"github.com/druidcaesa/gotool"
 	"time"
 )
 
@@ -21,4 +23,25 @@ type SysDictData struct {
 
 func (SysDictData) TableName() string {
 	return "sys_dict_data"
+}
+
+// MarshalDictList 序列化字典数据
+func (SysDictData) MarshalDictList(d []*SysDictData) string {
+	marshal, err := json.Marshal(&d)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return ""
+	}
+	return string(marshal)
+}
+
+// UnmarshalDictList 反序列化字典数据
+func (SysDictData) UnmarshalDictList(data string) []*SysDictData {
+	s := make([]*SysDictData, 0)
+	err := json.Unmarshal([]byte(data), &s)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return s
 }
