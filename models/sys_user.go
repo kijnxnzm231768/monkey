@@ -1,6 +1,7 @@
 package models
 
 import (
+	"reflect"
 	"time"
 )
 
@@ -32,4 +33,8 @@ func (receiver SysUser) TableName() string {
 // IsAdmin 判断用户是不是管理员
 func (u SysUser) IsAdmin(userId int64) bool {
 	return userId > 0 && 1 == userId
+}
+
+func (a SysUser) IsEmpty() bool {
+	return reflect.DeepEqual(a, SysUser{})
 }

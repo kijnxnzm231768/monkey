@@ -25,7 +25,7 @@ export function getUser(userId) {
 // 新增用户
 export function addUser(data) {
   return request({
-    url: '/system/user',
+    url: '/api/v1/user/add',
     method: 'post',
     data: data
   })
@@ -34,7 +34,7 @@ export function addUser(data) {
 // 修改用户
 export function updateUser(data) {
   return request({
-    url: '/system/user',
+    url: '/api/v1/user/edit',
     method: 'put',
     data: data
   })
@@ -43,7 +43,7 @@ export function updateUser(data) {
 // 删除用户
 export function delUser(userId) {
   return request({
-    url: '/system/user/' + userId,
+    url: '/api/v1/user/remove/' + userId,
     method: 'delete'
   })
 }
@@ -64,7 +64,7 @@ export function resetUserPwd(userId, password) {
     password
   }
   return request({
-    url: '/system/user/resetPwd',
+    url: '/api/v1/user/resetPwd',
     method: 'put',
     data: data
   })

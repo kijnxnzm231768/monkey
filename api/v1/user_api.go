@@ -9,6 +9,7 @@ import (
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
+	"net/http"
 	"strconv"
 )
 
@@ -107,4 +108,91 @@ func (a UserApi) AuthRole(c *gin.Context) {
 	}
 	m["user"] = user
 	c.JSON(200, resp.Success(m))
+}
+
+// Add 新增用户
+func (a UserApi) Add(c *gin.Context) {
+	userBody := request.UserBody{}
+	if c.BindJSON(&userBody) == nil {
+		//根据用户名查询用户
+		user := a.userService.GetUserByUserName(userBody.UserName)
+		if user != nil {
+			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，登录账号已存在"))
+			return
+		} else if a.userService.CheckPhoneNumUnique(userBody) != nil {
+			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，手机号码已存在"))
+			return
+		} else if a.userService.CheckEmailUnique(userBody) != nil {
+			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，邮箱已存在"))
+			return
+		}
+		//进行密码加密
+		userBody.Password = gotool.BcryptUtils.Generate(userBody.Password)
+		//添加用户
+		if a.userService.Insert(userBody) {
+			c.JSON(http.StatusOK, resp.Success(nil))
+		} else {
+			c.JSON(http.StatusInternalServerError, resp.ErrorResp("保存失败"))
+		}
+	} else {
+		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+	}
+}
+
+// Edit 修改用户
+func (a UserApi) Edit(c *gin.Context) {
+	userBody := request.UserBody{}
+	if c.BindJSON(&userBody) == nil {
+		if a.userService.CheckPhoneNumUnique(userBody) != nil {
+			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，手机号码已存在"))
+			return
+		} else if a.userService.CheckEmailUnique(userBody) != nil {
+			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，邮箱已存在"))
+			return
+		}
+		//进行用户修改操作
+		if a.userService.Edit(userBody) > 0 {
+			c.JSON(http.StatusOK, resp.Success(nil))
+		} else {
+			c.JSON(http.StatusInternalServerError, resp.ErrorResp("修改失败"))
+		}
+	} else {
+		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+	}
+}
+
+// Remove 删除用户
+func (a UserApi) Remove(c *gin.Context) {
+	param := c.Param("userId")
+	userId, err := strconv.ParseInt(param, 10, 64)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+		return
+	}
+	if a.userService.Remove(userId) > 0 {
+		c.JSON(http.StatusOK, resp.Success(nil))
+	} else {
+		c.JSON(http.StatusInternalServerError, resp.ErrorResp("删除失败"))
+	}
+}
+
+// ResetPwd 修改重置密码
+func (a UserApi) ResetPwd(c *gin.Context) {
+	userBody := request.UserBody{}
+	if c.BindJSON(&userBody) == nil {
+		if a.userService.CheckUserAllowed(userBody) {
+			c.JSON(http.StatusInternalServerError, resp.ErrorResp("不允许操作超级管理员用户"))
+			return
+		}
+		userBody.Password = gotool.BcryptUtils.Generate(userBody.Password)
+		//进行密码修改
+		if a.userService.ResetPwd(userBody) > 0 {
+			c.JSON(http.StatusOK, resp.Success(nil))
+		} else {
+			c.JSON(http.StatusInternalServerError, resp.ErrorResp("重置失败"))
+		}
+	} else {
+		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+	}
 }

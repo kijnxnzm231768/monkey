@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"monkey-admin/pkg/filter"
 	"monkey-admin/pkg/jwt"
 	"monkey-admin/pkg/middleware"
 	"monkey-admin/pkg/middleware/logger"
@@ -14,6 +15,7 @@ func Init() *gin.Engine {
 	router.Use(logger.LoggerToFile())
 	router.Use(middleware.Recover)
 	router.Use(jwt.JWTAuth())
+	router.Use(filter.DemoHandler())
 	//v1版本api
 	v1Router := router.Group("/api/v1")
 	{

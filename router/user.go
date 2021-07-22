@@ -14,5 +14,13 @@ func initUserRouter(router *gin.RouterGroup) {
 		userRouter.GET("/getInfo/:userId", userApi.GetInfo)
 		userRouter.GET("/getInfo", userApi.GetInfo)
 		userRouter.GET("/authRole/:userId", userApi.AuthRole)
+		//新增用户
+		userRouter.POST("/add", userApi.Add)
+		//修改用户
+		userRouter.PUT("/edit", userApi.Edit)
+		//删除用户
+		userRouter.DELETE("/remove/:userId", userApi.Remove)
+		//重置密码
+		userRouter.PUT("/resetPwd", userApi.ResetPwd)
 	}
 }

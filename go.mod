@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/Unknwon/goconfig v0.0.0-20200908083735-df7de6a44db8
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/druidcaesa/gotool v0.0.0-20210712144247-a60a0b9da560
+	github.com/druidcaesa/gotool v0.0.0-20210722000450-b972ac6f3771
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/go-xorm/xorm v0.7.9

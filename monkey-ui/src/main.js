@@ -21,6 +21,8 @@ import 'moment/locale/zh-cn'
 // 使用中文时间
 moment.locale('zh-cn')
 Vue.prototype.$moment = moment
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree } from "@/utils/ruoyi";

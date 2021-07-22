@@ -26,8 +26,9 @@ type DbCfg struct {
 
 // AppServer 应用程序配置
 type AppServer struct {
-	Port string //App运行端口
-	Lock string //是否开启多终端登录 0开启 1不开启
+	Port        string //App运行端口
+	Lock        string //是否开启多终端登录 0开启 1不开启
+	DemoEnabled bool   //是否是演示模式
 }
 
 // LoggerCfg 日志配置结构体
@@ -84,6 +85,8 @@ func GetMysqlCfg() (mysql DbCfg) {
 func GetServerCfg() (server AppServer) {
 	server.Port, _ = Cfg.GetValue("app", "server")
 	server.Lock, _ = Cfg.GetValue("app", "lock")
+	demoEnabled, _ := Cfg.GetValue("app", "demoEnabled")
+	server.DemoEnabled = demoEnabled == "0"
 	return server
 }
 

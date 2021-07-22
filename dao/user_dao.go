@@ -54,9 +54,11 @@ func (d UserDao) Find(query request.UserQuery) ([]*response.UserResponse, int64)
 // GetUserById 根据id查询用户数据
 func (d UserDao) GetUserById(userId int64) *response.UserResponse {
 	var resp response.UserResponse
-	_, err := d.querySql().Where("u.user_id = ?", userId).Get(&resp)
+	get, err := d.querySql().Where("u.user_id = ?", userId).Get(&resp)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
+	}
+	if !get {
 		return nil
 	}
 	return &resp
@@ -64,10 +66,106 @@ func (d UserDao) GetUserById(userId int64) *response.UserResponse {
 
 // GetUserByUserName 根据用户名查询用户数据
 func (d UserDao) GetUserByUserName(user models.SysUser) *models.SysUser {
-	_, err := SqlDB.Get(&user)
+	i, err := SqlDB.Get(&user)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
 		return nil
 	}
-	return &user
+	if i {
+		return &user
+	}
+	return nil
+}
+
+// CheckEmailUnique 校验邮箱是否存在
+func (d UserDao) CheckEmailUnique(user request.UserBody) *models.SysUser {
+	sysUser := models.SysUser{}
+	session := SqlDB.NewSession().Table("sys_user")
+	session.Cols("user_id", "email")
+	session.Where("email = ?", user.Email)
+	if user.UserId > 0 {
+		session.And("user_id != ?", user.UserId)
+	}
+	get, _ := session.Limit(1).Get(&sysUser)
+	if !get {
+		return nil
+	}
+	return &sysUser
+}
+
+// CheckPhoneNumUnique 校验手机号是否存在
+func (d UserDao) CheckPhoneNumUnique(body request.UserBody) *models.SysUser {
+	sysUser := models.SysUser{}
+	session := SqlDB.NewSession().Table("sys_user")
+	session.Cols("user_id", "phone_num")
+	session.Where("phone_num = ?", body.PhoneNumber)
+	if body.UserId > 0 {
+		session.And("user_id != ?", body.UserId)
+	}
+	get, _ := session.Limit(1).Get(&sysUser)
+	if !get {
+		return nil
+	}
+	return &sysUser
+}
+
+// InsertUser 添加用户
+func (d UserDao) InsertUser(body request.UserBody) *request.UserBody {
+	session := SqlDB.NewSession()
+	session.Begin()
+	_, err := session.Table("sys_user").Insert(&body)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+	}
+	session.Commit()
+	return &body
+}
+
+// Update 修改用户数据
+func (d UserDao) Update(body request.UserBody) int64 {
+	session := SqlDB.NewSession().Table("sys_user")
+	session.Begin()
+	update, err := session.Where("user_id = ?", body.UserId).Update(&body)
+	if err != nil {
+		session.Rollback()
+		gotool.Logs.ErrorLog().Println(err)
+		return 0
+	}
+	session.Commit()
+	return update
+}
+
+// Remove 根据id删除用户数据
+func (d UserDao) Remove(id int64) int64 {
+	user := models.SysUser{
+		UserId: id,
+	}
+	session := SqlDB.NewSession().Table("sys_user")
+	session.Begin()
+	i, err := session.Delete(&user)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+	}
+	session.Commit()
+	return i
+}
+
+// ResetPwd 修改用户密码数据库操作
+func (d UserDao) ResetPwd(body request.UserBody) int64 {
+	user := models.SysUser{
+		UserId:   body.UserId,
+		Password: body.Password,
+	}
+	session := SqlDB.NewSession()
+	session.Begin()
+	update, err := session.Where("user_id = ?", user.UserId).Cols("password").Update(&user)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+		return 0
+	}
+	session.Commit()
+	return update
 }
