@@ -22,5 +22,6 @@ func initUserRouter(router *gin.RouterGroup) {
 		userRouter.DELETE("/remove/:userId", userApi.Remove)
 		//重置密码
 		userRouter.PUT("/resetPwd", userApi.ResetPwd)
+		userRouter.GET("/export", userApi.Export)
 	}
 }

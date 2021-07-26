@@ -6,6 +6,7 @@ import (
 	"monkey-admin/models"
 	"monkey-admin/models/request"
 	"monkey-admin/models/response"
+	"monkey-admin/pkg/excels"
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
@@ -17,7 +18,7 @@ import (
 type UserApi struct {
 	userService service.UserService
 	roleService service.RoleService
-	potService  service.PostService
+	postService service.PostService
 }
 
 // Find 查询用户列表
@@ -43,7 +44,7 @@ func (a UserApi) GetInfo(c *gin.Context) {
 	//查询角色
 	roleAll, _ := a.roleService.SelectRoleAll(nil)
 	//岗位所有数据
-	postAll := a.potService.FindAll()
+	postAll := a.postService.FindAll()
 	//判断id传入的是否为空
 	if !gotool.StrUtils.HasEmpty(param) {
 		parseInt, err := strconv.ParseInt(param, 10, 64)
@@ -64,7 +65,7 @@ func (a UserApi) GetInfo(c *gin.Context) {
 			//根据id获取用户数据
 			r.User = a.userService.GetUserById(parseInt)
 			//根据用户ID查询岗位id集合
-			r.PostIds = a.potService.SelectPostListByUserId(parseInt)
+			r.PostIds = a.postService.SelectPostListByUserId(parseInt)
 			//根据用户ID查询角色id集合
 			r.RoleIds = a.roleService.SelectRoleListByUserId(parseInt)
 		}
@@ -194,5 +195,25 @@ func (a UserApi) ResetPwd(c *gin.Context) {
 		}
 	} else {
 		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+	}
+}
+
+// Export 导出excel
+func (a UserApi) Export(c *gin.Context) {
+	query := request.UserQuery{}
+	if c.BindQuery(&query) == nil {
+		items := make([]interface{}, 0)
+		list, _ := a.userService.FindList(query)
+		for _, userResponse := range list {
+			items = append(items, *userResponse)
+		}
+		_, file := excels.ExportExcel(items, "用户表")
+		c.Header("Content-Type", "application/octet-stream")
+		c.Header("Content-Disposition", "attachment; filename="+gotool.IdUtils.IdUUIDToRan(false)+".xlsx")
+		c.Header("Content-Transfer-Encoding", "binary")
+		c.Header("FileName", gotool.IdUtils.IdUUIDToRan(false)+".xlsx")
+		file.Write(c.Writer)
+	} else {
+		c.JSON(200, resp.ErrorResp(500, "参数错误"))
 	}
 }

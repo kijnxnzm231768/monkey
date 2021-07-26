@@ -22,6 +22,6 @@ func inSquareRequest() []string {
 	var req []string
 	//一下是放行的请求
 	//放行登录请求
-	req = append(req, "/api/v1/login")
+	req = append(req, "/api/v1/login", "/api/v1/user/export")
 	return req
 }

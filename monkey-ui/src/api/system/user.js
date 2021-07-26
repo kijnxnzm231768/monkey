@@ -51,7 +51,7 @@ export function delUser(userId) {
 // 导出用户
 export function exportUser(query) {
   return request({
-    url: '/system/user/export',
+    url: '/api/v1/user/export',
     method: 'get',
     params: query
   })
