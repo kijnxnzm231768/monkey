@@ -20,6 +20,8 @@ type Tree struct {
 	Selected        bool        `json:"-"`        //选中
 	PartialSelected bool        `json:"-"`        //部分选中
 	Children        []Tree      `json:"children"` //子节点
+	Id              int         `json:"id"`
+	Label           string      `json:"label"`
 }
 
 // ConvertToINodeArray 其他的结构体想要生成菜单树，直接实现这个接口
@@ -36,6 +38,8 @@ type INode interface {
 	IsRoot() bool
 	// GetPath 路径
 	GetPath() string
+	GetId() int
+	GetLabel() string
 }
 type INodes []INode
 
@@ -93,6 +97,8 @@ func GenerateTree(nodes, selectedNodes []INode) (trees []Tree) {
 			Redirect:   "noRedirect",
 			Meta:       m,
 			Component:  component,
+			Id:         v.GetId(),
+			Label:      v.GetLabel(),
 		}
 		// 递归之前，根据父节点确认 childTree 的选中状态
 		childTree.Selected = nodeSelected(v, selectedNodes, childTree.Children)
@@ -149,6 +155,8 @@ func recursiveTree(tree *Tree, nodes, selectedNodes []INode) {
 				Hidden:    flag,
 				Meta:      m,
 				Component: component,
+				Id:        v.GetId(),
+				Label:     v.GetLabel(),
 			}
 			// 递归之前，根据子节点和父节点确认 childTree 的选中状态
 			childTree.Selected = nodeSelected(v, selectedNodes, childTree.Children) || tree.Selected
@@ -265,4 +273,11 @@ func (s SystemMenus) ConvertToINodeArray(*[]models.SysMenu) (nodes []INode) {
 		nodes = append(nodes, v)
 	}
 	return
+}
+
+// GetTree 获取树结构数据
+func (s SystemMenus) GetTree(m *[]models.SysMenu) []Tree {
+	s = *m
+	array := s.ConvertToINodeArray(m)
+	return GenerateTree(array, nil)
 }

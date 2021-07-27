@@ -40,15 +40,13 @@ func (d RoleDao) SelectRoleList(q *request.RoleQuery) ([]*models.SysRole, int64)
 		session.And("r.role_key like concat('%', ?, '%')", q.RoleKey)
 	}
 	if !gotool.StrUtils.HasEmpty(q.BeginTime) {
-		timestamp, _ := gotool.DateUtil.InterpretStringToTimestamp(q.BeginTime, "YYYY-MM-DD  hh:mm:ss")
-		session.And("date_format(r.create_time,'%y%m%d') &gt;= date_format(?,'%y%m%d')", timestamp)
+		session.And("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d')", q.BeginTime)
 	}
 	if !gotool.StrUtils.HasEmpty(q.EndTime) {
-		timestamp, _ := gotool.DateUtil.InterpretStringToTimestamp(q.EndTime, "YYYY-MM-DD  hh:mm:ss")
-		session.And("date_format(r.create_time,'%y%m%d') &lt;= date_format(?,'%y%m%d')", timestamp)
+		session.And("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d')", q.EndTime)
 	}
 	total, _ := page.GetTotal(session.Clone())
-	err := session.Limit(q.PageSize, page.StartSize(q.PageNum, q.PageSize)).Find(&roles)
+	err := session.Limit(q.PageSize, page.StartSize(q.PageNum, q.PageSize)).OrderBy("r.role_sort").Find(&roles)
 	if err != nil {
 		return nil, 0
 	}
@@ -99,4 +97,96 @@ func (d RoleDao) GetRoleListByUserId(id int64) *[]models.SysRole {
 		return nil
 	}
 	return &roles
+}
+
+// SelectRoleByRoleId 根据角色id查询角色数据
+func (d RoleDao) SelectRoleByRoleId(id int64) *models.SysRole {
+	role := models.SysRole{}
+	_, err := d.sqlSelectJoin().Where("r.role_id = ?", id).Get(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &role
+}
+
+// CheckRoleNameUnique 校验角色名称是否唯一
+func (d RoleDao) CheckRoleNameUnique(role models.SysRole) int64 {
+	session := SqlDB.Table(role.TableName()).Where("role_name = ?", role.RoleName)
+	if role.RoleId > 0 {
+		session.And("role_id != ?", role.RoleId)
+	}
+	count, err := session.Count(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return count
+}
+
+// CheckRoleKeyUnique 校验角色权限是否唯一
+func (d RoleDao) CheckRoleKeyUnique(role models.SysRole) int64 {
+	session := SqlDB.Table(role.TableName()).Where("role_key = ?", role.RoleKey)
+	if role.RoleId > 0 {
+		session.And("role_id != ?", role.RoleId)
+	}
+	count, err := session.Count(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+	}
+	return count
+}
+
+// Add 添加角色进入数据库操作
+func (d RoleDao) Add(role models.SysRole) models.SysRole {
+	session := SqlDB.NewSession()
+	session.Begin()
+	_, err := session.Insert(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+	}
+	session.Commit()
+	return role
+}
+
+// Update 修改数据
+func (d RoleDao) Update(role models.SysRole) int64 {
+	session := SqlDB.NewSession()
+	session.Begin()
+	update, err := session.Where("role_id = ?", role.RoleId).Update(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+		return 0
+	}
+	session.Commit()
+	return update
+}
+
+// Delete 删除角色
+func (d RoleDao) Delete(role models.SysRole) int64 {
+	session := SqlDB.NewSession()
+	session.Begin()
+	i, err := session.Delete(&role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+		return 0
+	}
+	session.Commit()
+	return i
+}
+
+// UpdateRoleStatus 修改角色状态
+func (d RoleDao) UpdateRoleStatus(role *models.SysRole) int64 {
+	session := SqlDB.NewSession()
+	session.Begin()
+	update, err := session.Where("role_id = ?", role.RoleId).Cols("status", "update_by", "update_time").Update(role)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+		return 0
+	}
+	session.Commit()
+	return update
 }

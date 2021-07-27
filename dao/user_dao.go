@@ -169,3 +169,50 @@ func (d UserDao) ResetPwd(body request.UserBody) int64 {
 	session.Commit()
 	return update
 }
+
+// GetAllocatedList 查询未分配用户角色列表
+func (d UserDao) GetAllocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+	resp := make([]*response.UserResponse, 0)
+	session := SqlDB.NewSession()
+	session.Table([]string{"sys_user", "u"}).Distinct("u.user_id", "u.dept_id", "u.user_name", "u.nick_name", "u.email", "u.phone_number", "u.status", "u.create_time").
+		Join("LEFT", []string{"sys_dept", "d"}, "u.dept_id = d.dept_id").
+		Join("LEFT", []string{"sys_user_role", "ur"}, "u.user_id = ur.user_id").
+		Join("LEFT", []string{"sys_role", "r"}, "r.role_id = ur.role_id").Where("u.del_flag = '0'").And("r.role_id = ?", query.RoleId)
+	if gotool.StrUtils.HasNotEmpty(query.UserName) {
+		session.And("u.user_name like concat('%', ?, '%')", query.UserName)
+	}
+	if gotool.StrUtils.HasNotEmpty(query.PhoneNumber) {
+		session.And("u.phone_number like concat('%', ?, '%')", query.PhoneNumber)
+	}
+	total, _ := page.GetTotal(session.Clone())
+	err := session.Limit(query.PageSize, page.StartSize(query.PageNum, query.PageSize)).Find(&resp)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil, 0
+	}
+	return resp, total
+}
+
+// GetUnallocatedList 查询未分配用户角色列表
+func (d UserDao) GetUnallocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+	resp := make([]*response.UserResponse, 0)
+	session := SqlDB.NewSession()
+	session.Table([]string{"sys_user", "u"}).Distinct("u.user_id", "u.dept_id", "u.user_name", "u.nick_name", "u.email", "u.phone_number", "u.status", "u.create_time").
+		Join("LEFT", []string{"sys_dept", "d"}, "u.dept_id = d.dept_id").
+		Join("LEFT", []string{"sys_user_role", "ur"}, "u.user_id = ur.user_id").
+		Join("LEFT", []string{"sys_role", "r"}, "r.role_id = ur.role_id").Where("u.del_flag = '0'").And("r.role_id = ? or r.role_id IS NULL", query.RoleId).
+		And("u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and ur.role_id = ?)", query.RoleId)
+	if gotool.StrUtils.HasNotEmpty(query.UserName) {
+		session.And("u.user_name like concat('%', ?, '%')", query.UserName)
+	}
+	if gotool.StrUtils.HasNotEmpty(query.PhoneNumber) {
+		session.And("u.phone_number like concat('%', ?, '%')", query.PhoneNumber)
+	}
+	total, _ := page.GetTotal(session.Clone())
+	err := session.Limit(query.PageSize, page.StartSize(query.PageNum, query.PageSize)).Find(&resp)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil, 0
+	}
+	return resp, total
+}

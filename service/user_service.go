@@ -119,3 +119,13 @@ func (s UserService) CheckUserAllowed(body request.UserBody) bool {
 func (s UserService) ResetPwd(body request.UserBody) int64 {
 	return s.userDao.ResetPwd(body)
 }
+
+// GetAllocatedList 查询未分配用户角色列表
+func (s UserService) GetAllocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+	return s.userDao.GetAllocatedList(query)
+}
+
+// GetUnallocatedList 查询未分配用户角色列表
+func (s UserService) GetUnallocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+	return s.userDao.GetUnallocatedList(query)
+}

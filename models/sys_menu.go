@@ -25,7 +25,6 @@ type SysMenu struct {
 	UpdateBy   string    `json:"updateBy"`                      //更新人
 	Status     string    `xorm:"char(1)" json:"status"`         //菜单状态（0正常 1停用）
 	Component  string    `xorm:"varchar(255)" json:"component"` //组件路径
-	//Children   []SysMenu `xorm:"-" json:"children"`             //子菜单
 }
 
 func (SysMenu) TableName() string {
@@ -49,4 +48,12 @@ func (s SysMenu) GetData() interface{} {
 func (s SysMenu) IsRoot() bool {
 	// 这里通过FatherId等于0 或者 FatherId等于自身Id表示顶层根节点
 	return s.ParentId == 0 || s.ParentId == s.MenuId
+}
+
+func (s SysMenu) GetId() int {
+	return s.MenuId
+}
+
+func (s SysMenu) GetLabel() string {
+	return s.MenuName
 }

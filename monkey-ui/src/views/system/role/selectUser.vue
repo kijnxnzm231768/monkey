@@ -111,8 +111,8 @@ export default {
     // 查询表数据
     getList() {
       unallocatedUserList(this.queryParams).then(res => {
-        this.userList = res.rows;
-        this.total = res.total;
+        this.userList = res.data.list;
+        this.total = res.data.total;
       });
     },
     /** 搜索按钮操作 */

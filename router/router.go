@@ -29,6 +29,10 @@ func Init() *gin.Engine {
 		initDictDataRouter(v1Router)
 		//注册配置路由
 		initConfigRouter(v1Router)
+		//注册角色路由
+		initRoleRouter(v1Router)
+		//注册菜单路由
+		initMenuRouter(v1Router)
 	}
 	return router
 }

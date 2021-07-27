@@ -53,3 +53,20 @@ func (d MenuDao) GetMenuByUserId(id int64) *[]models.SysMenu {
 	}
 	return &menus
 }
+
+// GetMenuByRoleId 根据角色ID查询菜单树信息
+func (d MenuDao) GetMenuByRoleId(id int64, strictly bool) *[]int64 {
+	list := make([]int64, 0)
+	session := SqlDB.NewSession().Table([]string{"sys_menu", "m"})
+	session.Join("LEFT", []string{"sys_role_menu", "rm"}, "m.menu_id = rm.menu_id")
+	session.Where("rm.role_id = ?", id)
+	if strictly {
+		session.And("m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id = rm.menu_id and rm.role_id = ?)", id)
+	}
+	err := session.OrderBy("m.parent_id").OrderBy("m.order_num").Cols("m.menu_id").Find(&list)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &list
+}

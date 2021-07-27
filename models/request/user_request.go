@@ -8,6 +8,7 @@ import (
 // UserQuery 用户get请求数据参数
 type UserQuery struct {
 	base.GlobalQuery
+	RoleId      int64  `form:"roleId"`      //角色id
 	UserName    string `form:"userName"`    //用户名
 	Status      string `form:"status"`      //状态
 	PhoneNumber string `form:"phoneNumber"` //手机号

@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ $moment(scope.row.createTime).format('YYYY-MM-DD') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -358,8 +358,9 @@ export default {
       this.loading = true;
       listRole(this.addDateRange(this.queryParams, this.dateRange)).then(
         response => {
-          this.roleList = response.rows;
-          this.total = response.total;
+          let data = response.data
+          this.roleList = data.list;
+          this.total = data.total;
           this.loading = false;
         }
       );
@@ -397,7 +398,8 @@ export default {
     /** 根据角色ID查询菜单树结构 */
     getRoleMenuTreeselect(roleId) {
       return roleMenuTreeselect(roleId).then(response => {
-        this.menuOptions = response.menus;
+        let data = response.data
+        this.menuOptions = data.menus;
         return response;
       });
     },
@@ -533,7 +535,7 @@ export default {
         this.open = true;
         this.$nextTick(() => {
           roleMenu.then(res => {
-            let checkedKeys = res.checkedKeys
+            let checkedKeys = res.data.checkedKeys
             checkedKeys.forEach((v) => {
                 this.$nextTick(()=>{
                     this.$refs.menu.setChecked(v, true ,false);
