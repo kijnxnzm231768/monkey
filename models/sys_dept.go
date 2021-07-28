@@ -12,6 +12,7 @@ type SysDept struct {
 	ParentId   int       `json:"parentId"`
 	Phone      string    `xorm:"varchar(11)" json:"phone"`
 	Status     string    `xorm:"char(1)" json:"status"`
+	Email      string    `json:"email"`
 	DelFlag    string    `xorm:"char(1)" json:"delFlag"`
 	CreateTime time.Time `xorm:"created" json:"createTime"` //创建时间
 	CreateBy   string    `json:"createBy"`                  //创建人

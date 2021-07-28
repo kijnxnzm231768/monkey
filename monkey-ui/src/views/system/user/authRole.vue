@@ -29,7 +29,7 @@
       <el-table-column label="权限字符" align="center" prop="roleKey" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ $moment(scope.row.createTime).format('YYYY-MM-DD')  }}</span>
         </template>
       </el-table-column>
     </el-table>

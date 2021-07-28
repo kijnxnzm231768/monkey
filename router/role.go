@@ -29,5 +29,7 @@ func initRoleRouter(router *gin.RouterGroup) {
 		group.PUT("/authUser/cancel", roleApi.CancelAuthUser)
 		//批量选择用户授权
 		group.PUT("/authUser/selectAll", roleApi.UpdateAuthUserAll)
+		//导出excel
+		group.GET("/export", roleApi.Export)
 	}
 }

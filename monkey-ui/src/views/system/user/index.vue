@@ -703,6 +703,7 @@ export default {
           }
         ).then(res => {
           fileDownload(res.data,res.headers.filename)
+          this.exportLoading = false
         })
       }).catch(() => {
       })

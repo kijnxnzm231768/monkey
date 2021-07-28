@@ -12,5 +12,7 @@ func initDeptRouter(router *gin.RouterGroup) {
 	{
 		//获取部门下拉树列表
 		group.GET("/treeselect", v.TreeSelect)
+		//加载对应角色部门列表树
+		group.GET("/roleDeptTreeselect/:roleId", v.RoleDeptTreeSelect)
 	}
 }

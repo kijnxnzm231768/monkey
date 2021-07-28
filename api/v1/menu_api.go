@@ -2,15 +2,42 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"monkey-admin/models"
+	"monkey-admin/models/request"
 	"monkey-admin/pkg/library/tree/tree_menu"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
 	"strconv"
+	"time"
 )
 
 type MenuApi struct {
 	menuService service.MenuService
+}
+
+// List 查询菜单数据
+func (a MenuApi) List(c *gin.Context) {
+	//获取当前登录用户
+	info := user_util.GetUserInfo(c)
+	//获取参数
+	query := request.MenuQuery{}
+	if c.Bind(&query) != nil {
+		resp.Error(c)
+		return
+	}
+	resp.OK(c, a.menuService.GetMenuList(query, info))
+}
+
+// GetInfo 根据id查询菜单详情
+func (a MenuApi) GetInfo(c *gin.Context) {
+	param := c.Param("menuId")
+	menuId, err := strconv.Atoi(param)
+	if err != nil {
+		resp.ParamError(c, "参数绑定错误")
+		return
+	}
+	resp.OK(c, a.menuService.GetMenuByMenuId(menuId))
 }
 
 // RoleMenuTreeSelect 加载对应角色菜单列表树
@@ -36,4 +63,49 @@ func (a MenuApi) TreeSelect(c *gin.Context) {
 	systemMenus := tree_menu.SystemMenus{}
 	tree := systemMenus.GetTree(menus)
 	c.JSON(200, resp.Success(tree))
+}
+
+// Add 添加菜单数据
+func (a MenuApi) Add(c *gin.Context) {
+	menu := models.SysMenu{}
+	if c.Bind(&menu) != nil {
+		resp.ParamError(c, "参数绑定异常")
+		return
+	}
+	if a.menuService.InsertMenu(menu) > 0 {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
+}
+
+// Edit 修改菜单数据
+func (a MenuApi) Edit(c *gin.Context) {
+	menu := models.SysMenu{}
+	if c.Bind(&menu) != nil {
+		resp.ParamError(c)
+		return
+	}
+	menu.UpdateBy = user_util.GetUserInfo(c).UserName
+	menu.UpdateTime = time.Now()
+	if a.menuService.Update(menu) > 0 {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
+}
+
+// Delete 删除菜单
+func (a MenuApi) Delete(c *gin.Context) {
+	param := c.Param("menuId")
+	menuId, err := strconv.Atoi(param)
+	if err != nil {
+		resp.ParamError(c)
+		return
+	}
+	if a.menuService.Delete(menuId) > 0 {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
 }

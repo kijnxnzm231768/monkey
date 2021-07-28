@@ -1,9 +1,11 @@
 package v1
 
 import (
+	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
 	"monkey-admin/models/request"
+	"monkey-admin/pkg/excels"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
@@ -175,5 +177,25 @@ func (a RoleApi) UpdateAuthUserAll(c *gin.Context) {
 		resp.OK(c, "操作成功")
 	} else {
 		resp.Error(c, "操作失败")
+	}
+}
+
+// Export 导出Excel
+func (a RoleApi) Export(c *gin.Context) {
+	query := request.RoleQuery{}
+	items := make([]interface{}, 0)
+	if c.BindQuery(&query) == nil {
+		list, _ := a.roleService.FindList(query)
+		for _, role := range list {
+			items = append(items, *role)
+		}
+		_, file := excels.ExportExcel(items, "角色表")
+		c.Header("Content-Type", "application/octet-stream")
+		c.Header("Content-Disposition", "attachment; filename="+gotool.IdUtils.IdUUIDToRan(false)+".xlsx")
+		c.Header("Content-Transfer-Encoding", "binary")
+		c.Header("FileName", gotool.IdUtils.IdUUIDToRan(false)+".xlsx")
+		file.Write(c.Writer)
+	} else {
+		c.JSON(200, resp.ErrorResp(500, "参数错误"))
 	}
 }

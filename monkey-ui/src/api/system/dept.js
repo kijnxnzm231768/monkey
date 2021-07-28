@@ -36,7 +36,7 @@ export function treeselect() {
 // 根据角色ID查询部门树结构
 export function roleDeptTreeselect(roleId) {
   return request({
-    url: '/system/dept/roleDeptTreeselect/' + roleId,
+    url: '/api/v1/dept/roleDeptTreeselect/' + roleId,
     method: 'get'
   })
 }

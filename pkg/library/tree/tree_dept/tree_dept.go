@@ -210,3 +210,10 @@ func (s DeptList) ConvertToINodeArray(*[]models.SysDept) (nodes []INode) {
 	}
 	return
 }
+
+// GetTree 获取树结构
+func (s DeptList) GetTree(treeSelect *[]models.SysDept) []Tree {
+	s = *treeSelect
+	array := s.ConvertToINodeArray(treeSelect)
+	return GenerateTree(array, nil)
+}

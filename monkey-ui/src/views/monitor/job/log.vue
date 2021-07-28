@@ -116,7 +116,7 @@
       <el-table-column label="执行状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="执行时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ $moment(scope.row.createTime).format('YYYY-MM-DD')  }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

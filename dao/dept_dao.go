@@ -29,3 +29,20 @@ func (d DeptDao) TreeSelect(query request.DeptQuery) *[]models.SysDept {
 	}
 	return &depts
 }
+
+// SelectDeptListByRoleId 根据角色ID查询部门树信息
+func (d DeptDao) SelectDeptListByRoleId(id int64, strictly bool) *[]int64 {
+	list := make([]int64, 0)
+	session := SqlDB.NewSession().Table([]string{"sys_dept", "d"}).Cols("d.dept_id")
+	session.Join("LEFT", []string{"sys_role_dept", "rd"}, "d.dept_id = rd.dept_id").
+		Where("rd.role_id = ?", id)
+	if strictly {
+		session.And("d.dept_id not in (select d.parent_id from sys_dept d inner join sys_role_dept rd on d.dept_id = rd.dept_id and rd.role_id = ?)", id)
+	}
+	err := session.OrderBy("d.parent_id").OrderBy("d.order_num").Find(&list)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &list
+}

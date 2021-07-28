@@ -34,3 +34,8 @@ type UserInfo struct {
 	PostIds *[]int64          `json:"postIds,omitempty"` //岗位id集合
 	RoleIds *[]int64          `json:"roleIds,omitempty"` //觉得id集合
 }
+
+// IsAdmin 判断当前用户是否是管理员
+func (r UserResponse) IsAdmin() bool {
+	return r.UserId == 1
+}

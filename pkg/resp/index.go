@@ -61,7 +61,25 @@ func Error(c *gin.Context, data ...interface{}) {
 	c.JSON(401, response)
 	return
 }
-
+func ParamError(c *gin.Context, data ...interface{}) {
+	response := Response{
+		Status: 400,
+		Msg:    "参数绑定异常",
+		Data:   nil,
+	}
+	for _, value := range data {
+		switch value.(type) {
+		case string:
+			response.Msg = value.(string)
+		case int:
+			response.Status = value.(int)
+		case interface{}:
+			response.Data = value.(interface{})
+		}
+	}
+	c.JSON(401, response)
+	return
+}
 func OK(c *gin.Context, data ...interface{}) {
 	response := Response{
 		Status: 200,

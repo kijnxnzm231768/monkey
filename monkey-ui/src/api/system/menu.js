@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询菜单列表
 export function listMenu(query) {
   return request({
-    url: '/system/menu/list',
+    url: '/api/v1/menu/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listMenu(query) {
 // 查询菜单详细
 export function getMenu(menuId) {
   return request({
-    url: '/system/menu/' + menuId,
+    url: '/api/v1/menu/' + menuId,
     method: 'get'
   })
 }
@@ -35,8 +35,10 @@ export function roleMenuTreeselect(roleId) {
 
 // 新增菜单
 export function addMenu(data) {
+  data.isCache = parseInt(data.isCache)
+  data.isFrame = parseInt(data.isFrame)
   return request({
-    url: '/system/menu',
+    url: '/api/v1/menu/add',
     method: 'post',
     data: data
   })
@@ -44,8 +46,10 @@ export function addMenu(data) {
 
 // 修改菜单
 export function updateMenu(data) {
+  data.isCache = parseInt(data.isCache)
+  data.isFrame = parseInt(data.isFrame)
   return request({
-    url: '/system/menu',
+    url: '/api/v1/menu/edit',
     method: 'put',
     data: data
   })
@@ -54,7 +58,7 @@ export function updateMenu(data) {
 // 删除菜单
 export function delMenu(menuId) {
   return request({
-    url: '/system/menu/' + menuId,
+    url: '/api/v1/menu/' + menuId,
     method: 'delete'
   })
 }
