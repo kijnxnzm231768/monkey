@@ -35,3 +35,13 @@ func (d UserPostDao) RemoveUserPost(id int64) {
 	}
 	session.Commit()
 }
+
+// CountUserPostById 通过岗位ID查询岗位使用数量
+func (d UserPostDao) CountUserPostById(id int64) int64 {
+	count, err := SqlDB.NewSession().Table("sys_user_post").Cols("post_id").Where("post_id = ?", id).Count()
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return 0
+	}
+	return count
+}

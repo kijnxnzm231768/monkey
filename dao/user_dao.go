@@ -126,14 +126,14 @@ func (d UserDao) InsertUser(body request.UserBody) *request.UserBody {
 func (d UserDao) Update(body request.UserBody) int64 {
 	session := SqlDB.NewSession().Table("sys_user")
 	session.Begin()
-	update, err := session.Where("user_id = ?", body.UserId).Update(&body)
+	_, err := session.Where("user_id = ?", body.UserId).Update(&body)
 	if err != nil {
 		session.Rollback()
 		gotool.Logs.ErrorLog().Println(err)
 		return 0
 	}
 	session.Commit()
-	return update
+	return 1
 }
 
 // Remove 根据id删除用户数据
@@ -160,14 +160,14 @@ func (d UserDao) ResetPwd(body request.UserBody) int64 {
 	}
 	session := SqlDB.NewSession()
 	session.Begin()
-	update, err := session.Where("user_id = ?", user.UserId).Cols("password").Update(&user)
+	_, err := session.Where("user_id = ?", user.UserId).Cols("password").Update(&user)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
 		session.Rollback()
 		return 0
 	}
 	session.Commit()
-	return update
+	return 1
 }
 
 // GetAllocatedList 查询未分配用户角色列表

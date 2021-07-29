@@ -153,12 +153,15 @@ func (a UserApi) Edit(c *gin.Context) {
 		}
 		//进行用户修改操作
 		if a.userService.Edit(userBody) > 0 {
-			c.JSON(http.StatusOK, resp.Success(nil))
+			resp.OK(c)
+			return
 		} else {
-			c.JSON(http.StatusInternalServerError, resp.ErrorResp("修改失败"))
+			resp.Error(c)
+			return
 		}
 	} else {
-		c.JSON(http.StatusInternalServerError, resp.ErrorResp("参数错误"))
+		resp.ParamError(c)
+		return
 	}
 }
 
@@ -173,8 +176,10 @@ func (a UserApi) Remove(c *gin.Context) {
 	}
 	if a.userService.Remove(userId) > 0 {
 		c.JSON(http.StatusOK, resp.Success(nil))
+		return
 	} else {
 		c.JSON(http.StatusInternalServerError, resp.ErrorResp("删除失败"))
+		return
 	}
 }
 

@@ -25,7 +25,7 @@ func Success(data interface{}, msg ...string) *Response {
 // ErrorResp 错误返回
 func ErrorResp(data ...interface{}) *Response {
 	response := Response{
-		Status: 401,
+		Status: 500,
 		Msg:    "操作失败",
 		Data:   nil,
 	}
@@ -44,7 +44,7 @@ func ErrorResp(data ...interface{}) *Response {
 
 func Error(c *gin.Context, data ...interface{}) {
 	response := Response{
-		Status: 401,
+		Status: 500,
 		Msg:    "操作失败",
 		Data:   nil,
 	}
@@ -58,12 +58,12 @@ func Error(c *gin.Context, data ...interface{}) {
 			response.Data = value.(interface{})
 		}
 	}
-	c.JSON(401, response)
+	c.JSON(200, response)
 	return
 }
 func ParamError(c *gin.Context, data ...interface{}) {
 	response := Response{
-		Status: 400,
+		Status: 500,
 		Msg:    "参数绑定异常",
 		Data:   nil,
 	}
@@ -77,7 +77,7 @@ func ParamError(c *gin.Context, data ...interface{}) {
 			response.Data = value.(interface{})
 		}
 	}
-	c.JSON(401, response)
+	c.JSON(400, response)
 	return
 }
 func OK(c *gin.Context, data ...interface{}) {

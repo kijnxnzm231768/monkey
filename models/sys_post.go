@@ -7,6 +7,7 @@ type SysPost struct {
 	PostId     int64     `xorm:"pk autoincr" json:"postId"`   //岗位ID
 	PostCode   string    `xorm:"varchar(64)" json:"postCode"` //岗位编码
 	PostName   string    `xorm:"varchar(64)" json:"postName"` //岗位名称
+	PostSort   int       `json:"postSort"`                    //显示顺序
 	Status     string    `xorm:"char(1)" json:"status"`       //状态 0正常 1停用
 	Remark     string    `xorm:"varchar(512)" json:"remark"`  //备注
 	CreateTime time.Time `xorm:"created" json:"createTime"`   //创建时间

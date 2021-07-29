@@ -33,6 +33,8 @@ func Init() *gin.Engine {
 		initRoleRouter(v1Router)
 		//注册菜单路由
 		initMenuRouter(v1Router)
+		//注册岗位路由
+		initPostRouter(v1Router)
 	}
 	return router
 }

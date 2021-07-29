@@ -219,8 +219,8 @@ export default {
     getList() {
       this.loading = true;
       listPost(this.queryParams).then(response => {
-        this.postList = response.rows;
-        this.total = response.total;
+        this.postList = response.data.list;
+        this.total = response.data.total;
         this.loading = false;
       });
     },

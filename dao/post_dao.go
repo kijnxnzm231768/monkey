@@ -4,6 +4,8 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/go-xorm/xorm"
 	"monkey-admin/models"
+	"monkey-admin/models/request"
+	"monkey-admin/pkg/page"
 )
 
 type PostDao struct {
@@ -37,4 +39,87 @@ func (d PostDao) SelectPostListByUserId(userId int64) *[]int64 {
 		return nil
 	}
 	return &ids
+}
+
+// Find 查询岗位分页数据
+func (d PostDao) Find(query request.PostQuery) (*[]models.SysPost, int64) {
+	posts := make([]models.SysPost, 0)
+	session := SqlDB.NewSession().Table(models.SysPost{}.TableName())
+	if gotool.StrUtils.HasNotEmpty(query.PostCode) {
+		session.And("post_code like concat('%', ?, '%')", query.PostCode)
+	}
+	if gotool.StrUtils.HasNotEmpty(query.Status) {
+		session.And("status = ?", query.Status)
+	}
+	if gotool.StrUtils.HasNotEmpty(query.PostName) {
+		session.And("post_name like concat('%', ?, '%')", query.PostName)
+	}
+	total, _ := page.GetTotal(session.Clone())
+	err := session.Limit(query.PageSize, page.StartSize(query.PageNum, query.PageSize)).Find(&posts)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil, 0
+	}
+	return &posts, total
+}
+
+// CheckPostNameUnique 校验岗位名称是否存在
+func (d PostDao) CheckPostNameUnique(post models.SysPost) int64 {
+	session := SqlDB.NewSession().Table("sys_post").Cols("post_id").
+		Where("post_name = ?", post.PostName)
+	if post.PostId > 0 {
+		session.And("post_id != ?", post.PostId)
+	}
+	count, _ := session.Count()
+	return count
+}
+
+// CheckPostCodeUnique 校验岗位编码是否存在
+func (d PostDao) CheckPostCodeUnique(post models.SysPost) int64 {
+	session := SqlDB.NewSession().Table("sys_post").Cols("post_id").
+		Where("post_code = ?", post.PostCode)
+	if post.PostId > 0 {
+		session.And("post_id != ?", post.PostId)
+	}
+	count, _ := session.Count()
+	return count
+}
+
+// Insert 添加岗位数据
+func (d PostDao) Insert(post models.SysPost) int64 {
+	session := SqlDB.NewSession()
+	session.Begin()
+	insert, err := session.Insert(&post)
+	if err != nil {
+		session.Rollback()
+		gotool.Logs.ErrorLog().Println(err)
+		return 0
+	}
+	session.Commit()
+	return insert
+}
+
+// GetPostById 根据id查询岗位数据
+func (d PostDao) GetPostById(post models.SysPost) *models.SysPost {
+	_, err := SqlDB.NewSession().Where("post_id = ?", post.PostId).Get(&post)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &post
+}
+
+// Delete 批量删除岗位
+func (d PostDao) Delete(posts []int64) int64 {
+
+	session := SqlDB.NewSession()
+	session.Begin()
+	i, err := session.In("post_id", posts).Delete(&models.SysPost{})
+	if err != nil {
+		session.Rollback()
+		gotool.Logs.ErrorLog().Println(err)
+		return 0
+	}
+	session.Commit()
+	return i
 }

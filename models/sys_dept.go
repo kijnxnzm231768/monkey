@@ -13,7 +13,7 @@ type SysDept struct {
 	Phone      string    `xorm:"varchar(11)" json:"phone"`
 	Status     string    `xorm:"char(1)" json:"status"`
 	Email      string    `json:"email"`
-	DelFlag    string    `xorm:"char(1)" json:"delFlag"`
+	DelFlag    string    `xorm:"char(1) default('0')" json:"delFlag"`
 	CreateTime time.Time `xorm:"created" json:"createTime"` //创建时间
 	CreateBy   string    `json:"createBy"`                  //创建人
 	UpdateTime time.Time `json:"updateTime"`                //更新时间
