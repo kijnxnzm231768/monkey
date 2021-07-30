@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/go-xorm/xorm"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/page"
 )
 
@@ -27,7 +27,7 @@ func (d RoleDao) sqlSelectRoleAndUser() *xorm.Session {
 }
 
 // SelectRoleList 根据条件查询角色数据
-func (d RoleDao) SelectRoleList(q *request.RoleQuery) ([]*models.SysRole, int64) {
+func (d RoleDao) SelectRoleList(q *req.RoleQuery) ([]*models.SysRole, int64) {
 	roles := make([]*models.SysRole, 0)
 	session := d.sqlSelectJoin()
 	if !gotool.StrUtils.HasEmpty(q.RoleName) {

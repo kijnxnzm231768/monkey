@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/druidcaesa/gotool"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type MenuDao struct {
@@ -73,7 +73,7 @@ func (d MenuDao) GetMenuByRoleId(id int64, strictly bool) *[]int64 {
 }
 
 // GetMenuList 查询系统菜单列表
-func (d MenuDao) GetMenuList(query request.MenuQuery) *[]models.SysMenu {
+func (d MenuDao) GetMenuList(query req.MenuQuery) *[]models.SysMenu {
 	list := make([]models.SysMenu, 0)
 	session := SqlDB.NewSession().OrderBy("parent_id").OrderBy("order_num")
 	if gotool.StrUtils.HasNotEmpty(query.MenuName) {
@@ -94,7 +94,7 @@ func (d MenuDao) GetMenuList(query request.MenuQuery) *[]models.SysMenu {
 }
 
 // GetMenuListByUserId 根据用户查询系统菜单列表
-func (d MenuDao) GetMenuListByUserId(query request.MenuQuery) *[]models.SysMenu {
+func (d MenuDao) GetMenuListByUserId(query req.MenuQuery) *[]models.SysMenu {
 	session := SqlDB.NewSession().OrderBy("parent_id").OrderBy("order_num")
 	list := make([]models.SysMenu, 0)
 	session.Distinct("m.menu_id", "m.parent_id", "m.menu_name", "m.path", "m.component", "m.visible", "m.status", "ifnull(m.perms,'') as perms", "m.is_frame", "m.is_cache", "m.menu_type", "m.icon", "m.order_num", "m.create_time")

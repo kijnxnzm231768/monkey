@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询字典类型列表
 export function listType(query) {
   return request({
-    url: '/system/dict/type/list',
+    url: '/api/v1/dict/type/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listType(query) {
 // 查询字典类型详细
 export function getType(dictId) {
   return request({
-    url: '/system/dict/type/' + dictId,
+    url: '/api/v1/dict/type/' + dictId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getType(dictId) {
 // 新增字典类型
 export function addType(data) {
   return request({
-    url: '/system/dict/type',
+    url: '/api/v1/dict/type/add',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addType(data) {
 // 修改字典类型
 export function updateType(data) {
   return request({
-    url: '/system/dict/type',
+    url: '/api/v1/dict/type/edit',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateType(data) {
 // 删除字典类型
 export function delType(dictId) {
   return request({
-    url: '/system/dict/type/' + dictId,
+    url: '/api/v1/dict/type/' + dictId,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delType(dictId) {
 // 刷新字典缓存
 export function refreshCache() {
   return request({
-    url: '/system/dict/type/refreshCache',
+    url: '/api/v1/dict/type/refreshCache',
     method: 'delete'
   })
 }
@@ -54,7 +54,7 @@ export function refreshCache() {
 // 导出字典类型
 export function exportType(query) {
   return request({
-    url: '/system/dict/type/export',
+    url: '/api/v1/dict/type/export',
     method: 'get',
     params: query
   })

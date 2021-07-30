@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/excels"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/page"
@@ -21,7 +21,7 @@ type RoleApi struct {
 
 // Find 分页查询角色数据
 func (a RoleApi) Find(c *gin.Context) {
-	query := request.RoleQuery{}
+	query := req.RoleQuery{}
 	if c.BindQuery(&query) == nil {
 		list, i := a.roleService.FindList(query)
 		p := page.Page{
@@ -126,7 +126,7 @@ func (a RoleApi) ChangeStatus(c *gin.Context) {
 
 // AllocatedList 查询已分配用户角色列表
 func (a RoleApi) AllocatedList(c *gin.Context) {
-	query := request.UserQuery{}
+	query := req.UserQuery{}
 	if c.BindQuery(&query) != nil {
 		resp.Error(c)
 		return
@@ -140,7 +140,7 @@ func (a RoleApi) AllocatedList(c *gin.Context) {
 
 // UnallocatedList 查询未分配用户角色列表
 func (a RoleApi) UnallocatedList(c *gin.Context) {
-	query := request.UserQuery{}
+	query := req.UserQuery{}
 	if c.BindQuery(&query) != nil {
 		resp.Error(c)
 		return
@@ -168,7 +168,7 @@ func (a RoleApi) CancelAuthUser(c *gin.Context) {
 
 // UpdateAuthUserAll 批量选择用户授权
 func (a RoleApi) UpdateAuthUserAll(c *gin.Context) {
-	body := request.UserRoleBody{}
+	body := req.UserRoleBody{}
 	if c.Bind(&body) != nil {
 		resp.Error(c)
 		return
@@ -182,7 +182,7 @@ func (a RoleApi) UpdateAuthUserAll(c *gin.Context) {
 
 // Export 导出Excel
 func (a RoleApi) Export(c *gin.Context) {
-	query := request.RoleQuery{}
+	query := req.RoleQuery{}
 	items := make([]interface{}, 0)
 	if c.BindQuery(&query) == nil {
 		list, _ := a.roleService.FindList(query)

@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 	"monkey-admin/pkg/excels"
 	"monkey-admin/pkg/page"
@@ -23,7 +23,7 @@ type UserApi struct {
 
 // Find 查询用户列表
 func (a UserApi) Find(c *gin.Context) {
-	query := request.UserQuery{}
+	query := req.UserQuery{}
 	if c.BindQuery(&query) == nil {
 		list, i := a.userService.FindList(query)
 		success := resp.Success(page.Page{
@@ -113,7 +113,7 @@ func (a UserApi) AuthRole(c *gin.Context) {
 
 // Add 新增用户
 func (a UserApi) Add(c *gin.Context) {
-	userBody := request.UserBody{}
+	userBody := req.UserBody{}
 	if c.BindJSON(&userBody) == nil {
 		//根据用户名查询用户
 		user := a.userService.GetUserByUserName(userBody.UserName)
@@ -142,7 +142,7 @@ func (a UserApi) Add(c *gin.Context) {
 
 // Edit 修改用户
 func (a UserApi) Edit(c *gin.Context) {
-	userBody := request.UserBody{}
+	userBody := req.UserBody{}
 	if c.BindJSON(&userBody) == nil {
 		if a.userService.CheckPhoneNumUnique(userBody) != nil {
 			c.JSON(http.StatusOK, resp.ErrorResp(http.StatusInternalServerError, "失败，手机号码已存在"))
@@ -185,7 +185,7 @@ func (a UserApi) Remove(c *gin.Context) {
 
 // ResetPwd 修改重置密码
 func (a UserApi) ResetPwd(c *gin.Context) {
-	userBody := request.UserBody{}
+	userBody := req.UserBody{}
 	if c.BindJSON(&userBody) == nil {
 		if a.userService.CheckUserAllowed(userBody) {
 			c.JSON(http.StatusInternalServerError, resp.ErrorResp("不允许操作超级管理员用户"))
@@ -205,7 +205,7 @@ func (a UserApi) ResetPwd(c *gin.Context) {
 
 // Export 导出excel
 func (a UserApi) Export(c *gin.Context) {
-	query := request.UserQuery{}
+	query := req.UserQuery{}
 	if c.BindQuery(&query) == nil {
 		items := make([]interface{}, 0)
 		list, _ := a.userService.FindList(query)

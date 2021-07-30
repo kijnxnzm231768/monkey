@@ -3,7 +3,7 @@ package service
 import (
 	"monkey-admin/dao"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 )
 
@@ -15,7 +15,7 @@ type UserService struct {
 }
 
 // FindList 查询用户集合业务方法
-func (s UserService) FindList(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (s UserService) FindList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	return s.userDao.Find(query)
 }
 
@@ -32,17 +32,17 @@ func (s UserService) GetUserByUserName(name string) *models.SysUser {
 }
 
 // CheckEmailUnique 校验邮箱是否存在
-func (s UserService) CheckEmailUnique(user request.UserBody) *models.SysUser {
+func (s UserService) CheckEmailUnique(user req.UserBody) *models.SysUser {
 	return s.userDao.CheckEmailUnique(user)
 }
 
 // CheckPhoneNumUnique 校验手机号是否存在
-func (s UserService) CheckPhoneNumUnique(body request.UserBody) *models.SysUser {
+func (s UserService) CheckPhoneNumUnique(body req.UserBody) *models.SysUser {
 	return s.userDao.CheckPhoneNumUnique(body)
 }
 
 // Insert 添加用户业务逻辑
-func (s UserService) Insert(body request.UserBody) bool {
+func (s UserService) Insert(body req.UserBody) bool {
 	//添加用户数据库操作
 	user := s.userDao.InsertUser(body)
 	if user != nil {
@@ -54,7 +54,7 @@ func (s UserService) Insert(body request.UserBody) bool {
 }
 
 //新增用户岗位信息
-func (s UserService) insertUserPost(user *request.UserBody) {
+func (s UserService) insertUserPost(user *req.UserBody) {
 	postIds := user.PostIds
 	if len(postIds) > 0 {
 		sysUserPosts := make([]models.SysUserPost, 0)
@@ -70,7 +70,7 @@ func (s UserService) insertUserPost(user *request.UserBody) {
 }
 
 //新增用户角色信息
-func (s UserService) insertUserRole(user *request.UserBody) {
+func (s UserService) insertUserRole(user *req.UserBody) {
 	roleIds := user.RoleIds
 	if len(roleIds) > 0 {
 		roles := make([]models.SysUserRole, 0)
@@ -86,7 +86,7 @@ func (s UserService) insertUserRole(user *request.UserBody) {
 }
 
 // Edit 修改用户数据
-func (s UserService) Edit(body request.UserBody) int64 {
+func (s UserService) Edit(body req.UserBody) int64 {
 	//删除原有用户和角色关系
 	s.userRoleDao.RemoveUserRole(body.UserId)
 	//重新添加用具角色关系
@@ -110,22 +110,22 @@ func (s UserService) Remove(id int64) int64 {
 }
 
 // CheckUserAllowed 校验是否可以修改用户密码
-func (s UserService) CheckUserAllowed(body request.UserBody) bool {
+func (s UserService) CheckUserAllowed(body req.UserBody) bool {
 	user := models.SysUser{}
 	return user.IsAdmin(body.UserId)
 }
 
 // ResetPwd 修改用户密码
-func (s UserService) ResetPwd(body request.UserBody) int64 {
+func (s UserService) ResetPwd(body req.UserBody) int64 {
 	return s.userDao.ResetPwd(body)
 }
 
 // GetAllocatedList 查询未分配用户角色列表
-func (s UserService) GetAllocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (s UserService) GetAllocatedList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	return s.userDao.GetAllocatedList(query)
 }
 
 // GetUnallocatedList 查询未分配用户角色列表
-func (s UserService) GetUnallocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (s UserService) GetUnallocatedList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	return s.userDao.GetUnallocatedList(query)
 }

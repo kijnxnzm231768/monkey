@@ -3,7 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/library/tree/tree_dept"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
@@ -18,7 +18,7 @@ type DeptApi struct {
 
 // TreeSelect 查询部门菜单树
 func (a DeptApi) TreeSelect(c *gin.Context) {
-	query := request.DeptQuery{}
+	query := req.DeptQuery{}
 	if c.BindQuery(&query) == nil {
 		treeSelect := a.deptService.TreeSelect(query)
 		list := tree_dept.DeptList{}
@@ -35,7 +35,7 @@ func (a DeptApi) RoleDeptTreeSelect(c *gin.Context) {
 	roleId, _ := strconv.ParseInt(param, 10, 64)
 	checkedKeys := a.deptService.SelectDeptListByRoleId(roleId)
 	m["checkedKeys"] = checkedKeys
-	treeSelect := a.deptService.TreeSelect(request.DeptQuery{})
+	treeSelect := a.deptService.TreeSelect(req.DeptQuery{})
 	list := tree_dept.DeptList{}
 	tree := list.GetTree(treeSelect)
 	m["depts"] = tree
@@ -44,7 +44,7 @@ func (a DeptApi) RoleDeptTreeSelect(c *gin.Context) {
 
 // Find 查询部门列表
 func (a DeptApi) Find(c *gin.Context) {
-	query := request.DeptQuery{}
+	query := req.DeptQuery{}
 	if c.BindQuery(&query) != nil {
 		resp.ParamError(c)
 		return
@@ -60,7 +60,7 @@ func (a DeptApi) ExcludeChild(c *gin.Context) {
 		resp.ParamError(c)
 		return
 	}
-	list := a.deptService.GetList(request.DeptQuery{})
+	list := a.deptService.GetList(req.DeptQuery{})
 	var depts = *list
 	deptList := make([]models.SysDept, 0)
 	for _, dept := range depts {

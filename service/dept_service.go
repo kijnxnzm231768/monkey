@@ -3,7 +3,7 @@ package service
 import (
 	"monkey-admin/dao"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type DeptService struct {
@@ -12,7 +12,7 @@ type DeptService struct {
 }
 
 // TreeSelect 根据条件查询部门树
-func (s DeptService) TreeSelect(query request.DeptQuery) *[]models.SysDept {
+func (s DeptService) TreeSelect(query req.DeptQuery) *[]models.SysDept {
 	treeSelect := s.deptDao.TreeSelect(query)
 	return treeSelect
 }
@@ -24,7 +24,7 @@ func (s DeptService) SelectDeptListByRoleId(id int64) *[]int64 {
 }
 
 // GetList 查询部门列表
-func (s DeptService) GetList(query request.DeptQuery) *[]models.SysDept {
+func (s DeptService) GetList(query req.DeptQuery) *[]models.SysDept {
 	return s.deptDao.GetList(query)
 }
 

@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/go-xorm/xorm"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 	"monkey-admin/pkg/page"
 )
@@ -21,7 +21,7 @@ func (d UserDao) querySql() *xorm.Session {
 }
 
 // Find 查询用户集合
-func (d UserDao) Find(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (d UserDao) Find(query req.UserQuery) ([]*response.UserResponse, int64) {
 	resp := make([]*response.UserResponse, 0)
 	sql := d.querySql()
 	if !gotool.StrUtils.HasEmpty(query.UserName) {
@@ -78,7 +78,7 @@ func (d UserDao) GetUserByUserName(user models.SysUser) *models.SysUser {
 }
 
 // CheckEmailUnique 校验邮箱是否存在
-func (d UserDao) CheckEmailUnique(user request.UserBody) *models.SysUser {
+func (d UserDao) CheckEmailUnique(user req.UserBody) *models.SysUser {
 	sysUser := models.SysUser{}
 	session := SqlDB.NewSession().Table("sys_user")
 	session.Cols("user_id", "email")
@@ -94,7 +94,7 @@ func (d UserDao) CheckEmailUnique(user request.UserBody) *models.SysUser {
 }
 
 // CheckPhoneNumUnique 校验手机号是否存在
-func (d UserDao) CheckPhoneNumUnique(body request.UserBody) *models.SysUser {
+func (d UserDao) CheckPhoneNumUnique(body req.UserBody) *models.SysUser {
 	sysUser := models.SysUser{}
 	session := SqlDB.NewSession().Table("sys_user")
 	session.Cols("user_id", "phone_num")
@@ -110,7 +110,7 @@ func (d UserDao) CheckPhoneNumUnique(body request.UserBody) *models.SysUser {
 }
 
 // InsertUser 添加用户
-func (d UserDao) InsertUser(body request.UserBody) *request.UserBody {
+func (d UserDao) InsertUser(body req.UserBody) *req.UserBody {
 	session := SqlDB.NewSession()
 	session.Begin()
 	_, err := session.Table("sys_user").Insert(&body)
@@ -123,7 +123,7 @@ func (d UserDao) InsertUser(body request.UserBody) *request.UserBody {
 }
 
 // Update 修改用户数据
-func (d UserDao) Update(body request.UserBody) int64 {
+func (d UserDao) Update(body req.UserBody) int64 {
 	session := SqlDB.NewSession().Table("sys_user")
 	session.Begin()
 	_, err := session.Where("user_id = ?", body.UserId).Update(&body)
@@ -153,7 +153,7 @@ func (d UserDao) Remove(id int64) int64 {
 }
 
 // ResetPwd 修改用户密码数据库操作
-func (d UserDao) ResetPwd(body request.UserBody) int64 {
+func (d UserDao) ResetPwd(body req.UserBody) int64 {
 	user := models.SysUser{
 		UserId:   body.UserId,
 		Password: body.Password,
@@ -171,7 +171,7 @@ func (d UserDao) ResetPwd(body request.UserBody) int64 {
 }
 
 // GetAllocatedList 查询未分配用户角色列表
-func (d UserDao) GetAllocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (d UserDao) GetAllocatedList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	resp := make([]*response.UserResponse, 0)
 	session := SqlDB.NewSession()
 	session.Table([]string{"sys_user", "u"}).Distinct("u.user_id", "u.dept_id", "u.user_name", "u.nick_name", "u.email", "u.phone_number", "u.status", "u.create_time").
@@ -194,7 +194,7 @@ func (d UserDao) GetAllocatedList(query request.UserQuery) ([]*response.UserResp
 }
 
 // GetUnallocatedList 查询未分配用户角色列表
-func (d UserDao) GetUnallocatedList(query request.UserQuery) ([]*response.UserResponse, int64) {
+func (d UserDao) GetUnallocatedList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	resp := make([]*response.UserResponse, 0)
 	session := SqlDB.NewSession()
 	session.Table([]string{"sys_user", "u"}).Distinct("u.user_id", "u.dept_id", "u.user_name", "u.nick_name", "u.email", "u.phone_number", "u.status", "u.create_time").

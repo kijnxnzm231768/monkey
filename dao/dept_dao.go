@@ -3,14 +3,14 @@ package dao
 import (
 	"github.com/druidcaesa/gotool"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type DeptDao struct {
 }
 
 // TreeSelect 根据条件查询部门集合
-func (d DeptDao) TreeSelect(query request.DeptQuery) *[]models.SysDept {
+func (d DeptDao) TreeSelect(query req.DeptQuery) *[]models.SysDept {
 	depts := make([]models.SysDept, 0)
 	session := SqlDB.NewSession().Where("del_flag = '0'")
 	if query.ParentId > 0 {
@@ -48,7 +48,7 @@ func (d DeptDao) SelectDeptListByRoleId(id int64, strictly bool) *[]int64 {
 }
 
 // GetList 查询部门列表
-func (d DeptDao) GetList(query request.DeptQuery) *[]models.SysDept {
+func (d DeptDao) GetList(query req.DeptQuery) *[]models.SysDept {
 	list := make([]models.SysDept, 0)
 	session := SqlDB.NewSession().OrderBy("parent_id").OrderBy("order_num")
 	session.Where("del_flag = '0'")

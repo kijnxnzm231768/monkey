@@ -1,4 +1,4 @@
-package request
+package req
 
 // DeptQuery 部门查询参数结构体 GET请求
 type DeptQuery struct {

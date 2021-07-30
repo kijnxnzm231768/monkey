@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/excels"
 	"monkey-admin/pkg/file"
 	"monkey-admin/pkg/library/user_util"
@@ -23,7 +23,7 @@ type PostApi struct {
 
 // List 查询刚问分页数据
 func (a PostApi) List(c *gin.Context) {
-	query := request.PostQuery{}
+	query := req.PostQuery{}
 	if c.Bind(&query) != nil {
 		resp.ParamError(c)
 		return
@@ -122,7 +122,7 @@ func (a PostApi) Edit(c *gin.Context) {
 
 // Export 导出excel
 func (a PostApi) Export(c *gin.Context) {
-	query := request.PostQuery{}
+	query := req.PostQuery{}
 	if c.Bind(&query) != nil {
 		resp.ParamError(c)
 		return

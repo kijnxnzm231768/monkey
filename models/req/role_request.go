@@ -1,4 +1,4 @@
-package request
+package req
 
 import "monkey-admin/pkg/base"
 

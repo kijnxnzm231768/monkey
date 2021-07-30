@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/druidcaesa/gotool"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type UserRoleDao struct {
@@ -53,7 +53,7 @@ func (d UserRoleDao) DeleteAuthUser(role models.SysUserRole) int64 {
 }
 
 // InsertAuthUsers 批量选择用户授权
-func (d UserRoleDao) InsertAuthUsers(body request.UserRoleBody) int64 {
+func (d UserRoleDao) InsertAuthUsers(body req.UserRoleBody) int64 {
 	ids := body.UserIds
 	roles := make([]models.SysUserRole, 0)
 	for i := 0; i < len(ids); i++ {

@@ -3,7 +3,7 @@ package service
 import (
 	"monkey-admin/dao"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 )
 
@@ -32,7 +32,7 @@ func (s MenuService) SelectMenuListByRoleId(id int64) *[]int64 {
 }
 
 // GetMenuList 获取菜单列表
-func (s MenuService) GetMenuList(query request.MenuQuery, info *response.UserResponse) *[]models.SysMenu {
+func (s MenuService) GetMenuList(query req.MenuQuery, info *response.UserResponse) *[]models.SysMenu {
 	if info.IsAdmin() {
 		return s.menuDao.GetMenuList(query)
 	} else {

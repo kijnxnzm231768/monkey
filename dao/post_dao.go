@@ -4,7 +4,7 @@ import (
 	"github.com/druidcaesa/gotool"
 	"github.com/go-xorm/xorm"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/page"
 )
 
@@ -42,7 +42,7 @@ func (d PostDao) SelectPostListByUserId(userId int64) *[]int64 {
 }
 
 // Find 查询岗位分页数据
-func (d PostDao) Find(query request.PostQuery) (*[]models.SysPost, int64) {
+func (d PostDao) Find(query req.PostQuery) (*[]models.SysPost, int64) {
 	posts := make([]models.SysPost, 0)
 	session := SqlDB.NewSession().Table(models.SysPost{}.TableName())
 	if gotool.StrUtils.HasNotEmpty(query.PostCode) {

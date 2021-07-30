@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/library/tree/tree_menu"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
@@ -18,7 +18,7 @@ type LoginApi struct {
 
 // Login 登录
 func (a LoginApi) Login(c *gin.Context) {
-	loginBody := request.LoginBody{}
+	loginBody := req.LoginBody{}
 	if c.BindJSON(&loginBody) == nil {
 		m := make(map[string]string)
 		login, s := a.loginService.Login(loginBody.UserName, loginBody.Password)

@@ -3,7 +3,7 @@ package service
 import (
 	"monkey-admin/dao"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type RoleService struct {
@@ -13,7 +13,7 @@ type RoleService struct {
 }
 
 // SelectRoleAll 查询所有角色
-func (s RoleService) SelectRoleAll(query *request.RoleQuery) ([]*models.SysRole, int64) {
+func (s RoleService) SelectRoleAll(query *req.RoleQuery) ([]*models.SysRole, int64) {
 	if query == nil {
 		all := s.roleDao.SelectRoleAll()
 		return all, 0
@@ -32,7 +32,7 @@ func (s RoleService) GetRoleListByUserId(id int64) *[]models.SysRole {
 }
 
 // FindList 分页查询角色数据
-func (s RoleService) FindList(query request.RoleQuery) ([]*models.SysRole, int64) {
+func (s RoleService) FindList(query req.RoleQuery) ([]*models.SysRole, int64) {
 	return s.roleDao.SelectRoleList(&query)
 }
 
@@ -110,6 +110,6 @@ func (s RoleService) DeleteAuthUser(userRole models.SysUserRole) int64 {
 }
 
 // InsertAuthUsers 批量选择用户授权
-func (s RoleService) InsertAuthUsers(body request.UserRoleBody) int64 {
+func (s RoleService) InsertAuthUsers(body req.UserRoleBody) int64 {
 	return s.userRoleDao.InsertAuthUsers(body)
 }

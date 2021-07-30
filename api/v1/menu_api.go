@@ -3,7 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 	"monkey-admin/pkg/library/tree/tree_menu"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
@@ -21,7 +21,7 @@ func (a MenuApi) List(c *gin.Context) {
 	//获取当前登录用户
 	info := user_util.GetUserInfo(c)
 	//获取参数
-	query := request.MenuQuery{}
+	query := req.MenuQuery{}
 	if c.Bind(&query) != nil {
 		resp.Error(c)
 		return

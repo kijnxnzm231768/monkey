@@ -3,7 +3,7 @@ package service
 import (
 	"monkey-admin/dao"
 	"monkey-admin/models"
-	"monkey-admin/models/request"
+	"monkey-admin/models/req"
 )
 
 type PostService struct {
@@ -21,7 +21,7 @@ func (s PostService) SelectPostListByUserId(userId int64) *[]int64 {
 }
 
 // FindList 查询岗位分页列表
-func (s PostService) FindList(query request.PostQuery) (*[]models.SysPost, int64) {
+func (s PostService) FindList(query req.PostQuery) (*[]models.SysPost, int64) {
 	return s.postDao.Find(query)
 }
 

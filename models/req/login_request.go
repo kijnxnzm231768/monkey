@@ -1,4 +1,4 @@
-package request
+package req
 
 // LoginBody 登录参数
 type LoginBody struct {

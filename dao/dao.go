@@ -75,12 +75,18 @@ func initDict() {
 	//查询字典类型数据
 	dictTypeDao := new(DictTypeDao)
 	typeAll := dictTypeDao.FindAll()
-	//查询所有字典数据
+	//所有字典数据
 	d := new(DictDataDao)
+	listData := d.GetDiceDataAll()
 	m := new(models.SysDictData)
 	for _, dictType := range typeAll {
-		byType := d.GetByType(dictType.DictType)
-		RedisDB.SET(dictType.DictType, m.MarshalDictList(byType))
+		dictData := make([]models.SysDictData, 0)
+		for _, data := range *listData {
+			if dictType.DictType == data.DictType {
+				dictData = append(dictData, data)
+			}
+		}
+		RedisDB.SET(dictType.DictType, m.MarshalDictList(dictData))
 	}
 }
 

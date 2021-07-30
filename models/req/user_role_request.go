@@ -1,4 +1,4 @@
-package request
+package req
 
 // UserRoleBody 用户角色Post和Put参数接收结构体
 type UserRoleBody struct {

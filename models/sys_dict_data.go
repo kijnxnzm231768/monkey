@@ -26,7 +26,7 @@ func (SysDictData) TableName() string {
 }
 
 // MarshalDictList 序列化字典数据
-func (SysDictData) MarshalDictList(d []*SysDictData) string {
+func (SysDictData) MarshalDictList(d []SysDictData) string {
 	marshal, err := json.Marshal(&d)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
@@ -36,8 +36,8 @@ func (SysDictData) MarshalDictList(d []*SysDictData) string {
 }
 
 // UnmarshalDictList 反序列化字典数据
-func (SysDictData) UnmarshalDictList(data string) []*SysDictData {
-	s := make([]*SysDictData, 0)
+func (SysDictData) UnmarshalDictList(data string) []SysDictData {
+	s := make([]SysDictData, 0)
 	err := json.Unmarshal([]byte(data), &s)
 	if err != nil {
 		gotool.Logs.ErrorLog().Println(err)
