@@ -18,5 +18,9 @@ func initPostRouter(router *gin.RouterGroup) {
 		group.GET("/:postId", v.Get)
 		//删除岗位数据
 		group.DELETE("/:postId", v.Delete)
+		//修改岗位数据接口
+		group.PUT("/edit", v.Edit)
+		//导出excel
+		group.GET("/export", v.Export)
 	}
 }

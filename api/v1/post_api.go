@@ -5,12 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
 	"monkey-admin/models/request"
+	"monkey-admin/pkg/excels"
+	"monkey-admin/pkg/file"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type PostApi struct {
@@ -89,4 +92,46 @@ func (a PostApi) Delete(c *gin.Context) {
 	} else {
 		resp.Error(c)
 	}
+}
+
+// Edit 修改岗位数据接口
+func (a PostApi) Edit(c *gin.Context) {
+	post := models.SysPost{}
+	if c.Bind(&post) != nil {
+		resp.ParamError(c)
+		return
+	}
+	//校验岗位名称是否存在
+	if a.postService.CheckPostNameUnique(post) {
+		resp.Error(c, "修改岗位'"+post.PostName+"'失败，岗位名称已存在")
+		return
+	}
+	//检验岗位编码是否存在
+	if a.postService.CheckPostCodeUnique(post) {
+		resp.Error(c, "修改岗位'"+post.PostCode+"'失败，岗位编码已存在")
+		return
+	}
+	post.UpdateBy = user_util.GetUserInfo(c).UserName
+	post.UpdateTime = time.Now()
+	if a.postService.Update(post) {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
+}
+
+// Export 导出excel
+func (a PostApi) Export(c *gin.Context) {
+	query := request.PostQuery{}
+	if c.Bind(&query) != nil {
+		resp.ParamError(c)
+		return
+	}
+	list, _ := a.postService.FindList(query)
+	excelList := make([]interface{}, 0)
+	for _, post := range *list {
+		excelList = append(excelList, post)
+	}
+	_, files := excels.ExportExcel(excelList, "岗位数据表")
+	file.DownloadExcel(c, files)
 }

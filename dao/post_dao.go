@@ -123,3 +123,17 @@ func (d PostDao) Delete(posts []int64) int64 {
 	session.Commit()
 	return i
 }
+
+// Update 修改岗位数据
+func (d PostDao) Update(post models.SysPost) bool {
+	session := SqlDB.NewSession()
+	session.Begin()
+	_, err := session.Where("post_id = ?", post.PostId).Update(&post)
+	if err != nil {
+		session.Rollback()
+		gotool.Logs.ErrorLog().Println(err)
+		return false
+	}
+	session.Commit()
+	return true
+}

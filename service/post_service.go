@@ -52,3 +52,8 @@ func (s PostService) GetPostById(id int64) *models.SysPost {
 func (s PostService) Delete(ids []int64) bool {
 	return s.postDao.Delete(ids) > 0
 }
+
+// Update 修改岗位数据
+func (s PostService) Update(post models.SysPost) bool {
+	return s.postDao.Update(post)
+}

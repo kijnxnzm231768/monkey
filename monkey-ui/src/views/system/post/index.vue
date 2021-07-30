@@ -157,7 +157,9 @@
 
 <script>
 import { listPost, getPost, delPost, addPost, updatePost, exportPost } from "@/api/system/post";
-
+import { getToken } from '@/utils/auth'
+import axios from 'axios'
+import fileDownload from 'js-file-download'
 export default {
   name: "Post",
   data() {
@@ -319,12 +321,20 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.exportLoading = true;
-          return exportPost(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-          this.exportLoading = false;
-        }).catch(() => {});
+        this.exportLoading = true
+        axios.get(process.env.VUE_APP_BASE_API + '/api/v1/post/export',
+          {
+            headers: {
+              'Authorization': 'Bearer ' + getToken()
+            },
+            responseType: 'blob',
+            params: queryParams
+          }
+        ).then(res => {
+          fileDownload(res.data,res.headers.filename)
+          this.exportLoading = false
+        })
+      }).catch(() => {});
     }
   }
 };
