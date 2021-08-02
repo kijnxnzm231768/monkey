@@ -182,6 +182,9 @@
 
 <script>
 import { listConfig, getConfig, delConfig, addConfig, updateConfig, exportConfig, refreshCache } from "@/api/system/config";
+import axios from 'axios'
+import { getToken } from '@/utils/auth'
+import fileDownload from 'js-file-download'
 
 export default {
   name: "Config",
@@ -246,8 +249,8 @@ export default {
     getList() {
       this.loading = true;
       listConfig(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.configList = response.rows;
-          this.total = response.total;
+          this.configList = response.data.list;
+          this.total = response.data.total;
           this.loading = false;
         }
       );
@@ -348,12 +351,20 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.exportLoading = true;
-          return exportConfig(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-          this.exportLoading = false;
-        }).catch(() => {});
+        this.exportLoading = true
+        axios.get(process.env.VUE_APP_BASE_API + '/api/v1/config/export',
+          {
+            headers: {
+              'Authorization': 'Bearer ' + getToken()
+            },
+            responseType: 'blob',
+            params: queryParams
+          }
+        ).then(res => {
+          fileDownload(res.data,res.headers.filename)
+          this.exportLoading = false
+        })
+      }).catch(() => {});
     },
     /** 刷新缓存按钮操作 */
     handleRefreshCache() {

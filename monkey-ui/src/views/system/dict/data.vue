@@ -185,6 +185,9 @@
 <script>
 import { listData, getData, delData, addData, updateData, exportData } from "@/api/system/dict/data";
 import { listType, getType } from "@/api/system/dict/type";
+import { getToken } from '@/utils/auth'
+import axios from 'axios'
+import fileDownload from 'js-file-download'
 
 export default {
   name: "Data",
@@ -395,12 +398,20 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          this.exportLoading = true;
-          return exportData(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-          this.exportLoading = false;
-        }).catch(() => {});
+        this.exportLoading = true
+        axios.get(process.env.VUE_APP_BASE_API + '/api/v1/dict/data/export',
+          {
+            headers: {
+              'Authorization': 'Bearer ' + getToken()
+            },
+            responseType: 'blob',
+            params: queryParams
+          }
+        ).then(res => {
+          fileDownload(res.data,res.headers.filename)
+          this.exportLoading = false
+        })
+      }).catch(() => {});
     }
   }
 };

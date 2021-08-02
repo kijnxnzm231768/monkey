@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models/req"
+	"monkey-admin/pkg/cache"
 	"monkey-admin/pkg/library/tree/tree_menu"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/resp"
@@ -59,4 +60,12 @@ func (a LoginApi) GetRouters(c *gin.Context) {
 	array := systemMenus.ConvertToINodeArray(menus)
 	generateTree := tree_menu.GenerateTree(array, nil)
 	c.JSON(200, resp.Success(generateTree))
+}
+
+// Logout 退出登录
+func (a LoginApi) Logout(c *gin.Context) {
+	//删除Redis缓存
+	name := user_util.GetUserInfo(c).UserName
+	cache.RemoveKey(name)
+	resp.OK(c)
 }

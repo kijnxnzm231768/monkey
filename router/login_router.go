@@ -14,5 +14,7 @@ func initLoginRouter(router *gin.RouterGroup) {
 		loginRouter.POST("/login", loginApi.Login)
 		loginRouter.GET("/getInfo", loginApi.GetUserInfo)
 		loginRouter.GET("/getRouters", loginApi.GetRouters)
+		//退出登录
+		loginRouter.POST("/logout",loginApi.Logout)
 	}
 }

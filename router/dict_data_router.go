@@ -20,5 +20,7 @@ func initDictDataRouter(router *gin.RouterGroup) {
 		group.POST("/add", v.Add)
 		//删除字典数据
 		group.DELETE("/:dictCode", v.Delete)
+		//导出字典
+		group.GET("/export",v.Export)
 	}
 }

@@ -37,6 +37,8 @@ func Init() *gin.Engine {
 		initPostRouter(v1Router)
 		//注册字典类型路由
 		initDictTypeRouter(v1Router)
+		//注册公告路由
+		initNoticeRouter(v1Router)
 	}
 	return router
 }

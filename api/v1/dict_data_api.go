@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"monkey-admin/models"
 	"monkey-admin/models/req"
+	"monkey-admin/pkg/excels"
+	"monkey-admin/pkg/file"
 	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
@@ -77,4 +79,20 @@ func (a DictDataApi) Delete(c *gin.Context) {
 	} else {
 		resp.Error(c)
 	}
+}
+
+// Export 导出excel
+func (a DictDataApi) Export(c *gin.Context) {
+	query := req.DiceDataQuery{}
+	if c.Bind(&query) != nil {
+		resp.ParamError(c)
+		return
+	}
+	items := make([]interface{}, 0)
+	list, _ := a.dictDataService.GetList(query)
+	for _, data := range *list {
+		items = append(items, data)
+	}
+	_, files := excels.ExportExcel(items, "字典数据表")
+	file.DownloadExcel(c, files)
 }

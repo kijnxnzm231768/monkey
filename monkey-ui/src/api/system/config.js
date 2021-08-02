@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询参数列表
 export function listConfig(query) {
   return request({
-    url: '/system/config/list',
+    url: '/api/v1/config/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listConfig(query) {
 // 查询参数详细
 export function getConfig(configId) {
   return request({
-    url: '/system/config/' + configId,
+    url: '/api/v1/config/' + configId,
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function getConfigKey(configKey) {
 // 新增参数配置
 export function addConfig(data) {
   return request({
-    url: '/system/config',
+    url: '/api/v1/config/add',
     method: 'post',
     data: data
   })
@@ -37,7 +37,7 @@ export function addConfig(data) {
 // 修改参数配置
 export function updateConfig(data) {
   return request({
-    url: '/system/config',
+    url: '/api/v1/config/edit',
     method: 'put',
     data: data
   })
@@ -46,7 +46,7 @@ export function updateConfig(data) {
 // 删除参数配置
 export function delConfig(configId) {
   return request({
-    url: '/system/config/' + configId,
+    url: '/api/v1/config/' + configId,
     method: 'delete'
   })
 }
@@ -54,7 +54,7 @@ export function delConfig(configId) {
 // 刷新参数缓存
 export function refreshCache() {
   return request({
-    url: '/system/config/refreshCache',
+    url: '/api/v1/config/refreshCache',
     method: 'delete'
   })
 }
@@ -62,7 +62,7 @@ export function refreshCache() {
 // 导出参数
 export function exportConfig(query) {
   return request({
-    url: '/system/config/export',
+    url: '/api/v1/config/export',
     method: 'get',
     params: query
   })
