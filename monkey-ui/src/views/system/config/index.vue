@@ -361,6 +361,14 @@ export default {
             params: queryParams
           }
         ).then(res => {
+          if (!res.headers.filename){
+            Message({
+              message: "演示模式，不允许操作",
+              type: 'error'
+            })
+            this.exportLoading = false
+            return
+          }
           fileDownload(res.data,res.headers.filename)
           this.exportLoading = false
         })

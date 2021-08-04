@@ -13,7 +13,7 @@ func DemoHandler() gin.HandlerFunc {
 		if appServer.DemoEnabled {
 			request := inDisRequest()
 			for i := 0; i < len(request); i++ {
-				if c.Request.Method != "GET" || strings.Contains(c.Request.RequestURI, request[i]) {
+				if strings.Contains(c.Request.RequestURI, request[i]) {
 					c.JSON(http.StatusOK, gin.H{
 						"status": 500,
 						"msg":    "演示模式，不允许操作",
@@ -33,6 +33,6 @@ func inDisRequest() []string {
 	var req []string
 	//一下是放行的请求
 	//放行登录请求
-	req = append(req, "/remove", "/edit", "/insert", "/add", "delete", "/export", "/import")
+	req = append(req, "/remove", "/edit", "/insert", "/add", "/delete", "/export", "/import")
 	return req
 }

@@ -374,6 +374,7 @@ import fileDownload from 'js-file-download'
 import { treeselect } from '@/api/system/dept'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { Message } from 'element-ui'
 
 export default {
   name: 'User',
@@ -686,6 +687,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      let that = this
       const queryParams = this.queryParams
       this.$confirm('是否确认导出所有用户数据项?', '警告', {
         confirmButtonText: '确定',
@@ -702,6 +704,14 @@ export default {
             params: queryParams
           }
         ).then(res => {
+          if (!res.headers.filename){
+            Message({
+              message: "演示模式，不允许操作",
+              type: 'error'
+            })
+            this.exportLoading = false
+            return
+          }
           fileDownload(res.data,res.headers.filename)
           this.exportLoading = false
         })
