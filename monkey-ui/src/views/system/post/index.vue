@@ -160,6 +160,7 @@ import { listPost, getPost, delPost, addPost, updatePost, exportPost } from "@/a
 import { getToken } from '@/utils/auth'
 import axios from 'axios'
 import fileDownload from 'js-file-download'
+import { Message } from 'element-ui'
 export default {
   name: "Post",
   data() {

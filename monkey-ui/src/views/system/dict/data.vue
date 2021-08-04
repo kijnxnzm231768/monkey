@@ -187,6 +187,7 @@ import { listData, getData, delData, addData, updateData, exportData } from "@/a
 import { listType, getType } from "@/api/system/dict/type";
 import { getToken } from '@/utils/auth'
 import axios from 'axios'
+import { Message } from 'element-ui'
 import fileDownload from 'js-file-download'
 
 export default {

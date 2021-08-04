@@ -279,7 +279,7 @@ import { treeselect as menuTreeselect, roleMenuTreeselect } from '@/api/system/m
 import { treeselect as deptTreeselect, roleDeptTreeselect } from '@/api/system/dept'
 import axios from 'axios'
 import fileDownload from 'js-file-download'
-
+import { Message } from 'element-ui'
 export default {
   name: 'Role',
   data() {
@@ -659,8 +659,16 @@ export default {
             },
             responseType: 'blob',
             params: queryParams
-          }``
+          }
         ).then(res => {
+          if (!res.headers.filename){
+            Message({
+              message: "演示模式，不允许操作",
+              type: 'error'
+            })
+            this.exportLoading = false
+            return
+          }
           fileDownload(res.data, res.headers.filename)
           this.exportLoading = false
         })

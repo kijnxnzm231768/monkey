@@ -204,6 +204,7 @@
 import { listType, getType, delType, addType, updateType, exportType, refreshCache } from '@/api/system/dict/type'
 import { getToken } from '@/utils/auth'
 import axios from 'axios'
+import { Message } from 'element-ui'
 import fileDownload from 'js-file-download'
 
 export default {
@@ -258,7 +259,6 @@ export default {
   created() {
     this.getList()
     this.getDicts('sys_normal_disable').then(response => {
-      debugger
       this.statusOptions = response.data
     })
   },
@@ -375,6 +375,14 @@ export default {
             params: queryParams
           }
         ).then(res => {
+          if (!res.headers.filename){
+            Message({
+              message: "演示模式，不允许操作",
+              type: 'error'
+            })
+            this.exportLoading = false
+            return
+          }
           fileDownload(res.data, res.headers.filename)
           this.exportLoading = false
         })

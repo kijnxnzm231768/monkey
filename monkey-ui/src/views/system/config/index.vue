@@ -185,6 +185,7 @@ import { listConfig, getConfig, delConfig, addConfig, updateConfig, exportConfig
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 import fileDownload from 'js-file-download'
+import { Message } from 'element-ui'
 
 export default {
   name: "Config",
