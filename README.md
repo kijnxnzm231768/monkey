@@ -26,68 +26,40 @@ go run main.go 直接访问http://localhost:8080
 
 账号：admin  密码：admin123
 
-项目为前后端分离，前端地址：
-
-github地址：[https://github.com/tiger1103/gfast-ui](https://github.com/tiger1103/gfast-ui)
-
-gitee地址：[https://gitee.com/tiger1103/gfast-ui](https://gitee.com/tiger1103/gfast-ui)
+项目为前后端分离，前端代码在monkey-ui目录下 
 
 ## 演示图
 
-<table>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/707825ad3f29de74a8d6d02fbd73ad631ea.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/46be40cc6f01aa300eed53a19b5012bf484.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/4284796d4cea240d181b8f2201813dda710.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/3ecfac87a049f7fe36abbcaafb2c40d36cf.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/71c2d48905221a09a728df4aff4160b8607.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/c14c1ee9a64a6a9c2c22f67d43198767dbe.jpg"/></td>
-    </tr>	 
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/fdea1d8bb8625c27bf964176a2c8ebc6945.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/509d2708cfd762b6e6339364cac1cc1970c.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-f1fd681cc9d295db74e85ad6d2fe4389454.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-</table>
+![WX20210804-171404.png](https://i.loli.net/2021/08/04/kOY2tHZfAMTKFXQ.png)
+![WX20210804-172034.png](https://i.loli.net/2021/08/04/twOd9v1qRP7cZlX.png)
+![WX20210804-172645.png](https://i.loli.net/2021/08/04/RUsB8qwlZuaEdDL.png)
+![WX20210804-172633.png](https://i.loli.net/2021/08/04/P7swv5g9o3L4JIp.png)
+![WX20210804-172615.png](https://i.loli.net/2021/08/04/ng9A1FpmlbcaWJT.png)
+![WX20210804-172714.png](https://i.loli.net/2021/08/04/Y4TDF3rq98Akhao.png)
+![WX20210804-172735.png](https://i.loli.net/2021/08/04/YbaczLMherSJxR6.png)
+![WX20210804-172751.png](https://i.loli.net/2021/08/04/lnHoRfxwESa27DM.png)
+![WX20210804-172726.png](https://i.loli.net/2021/08/04/CkMHJvW4RDiQfnj.png)
+![WX20210804-172549.png](https://i.loli.net/2021/08/04/NA87nPgubIhatLr.png)
+![WX20210804-172802.png](https://i.loli.net/2021/08/04/JLZ2YbHuq3BDxUh.png)
+![WX20210804-172702.png](https://i.loli.net/2021/08/04/nclOa39fs4AxhUP.png)
+
 
 ## 感谢(排名不分先后)
-> gf框架 [https://github.com/gogf/gf](https://github.com/gogf/gf)
+> Gin框架 [https://github.com/gin-gonic/gin](https://github.com/gin-gonic/gin)
 >
+> gotool[https://github.com/druidcaesa/gotool](https://github.com/druidcaesa/gotool)
+> 
 > RuoYi-Vue [https://gitee.com/y_project/RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue)
 >
-> swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
+>jwt [https://github.com/dgrijalva/jwt-go](https://github.com/dgrijalva/jwt-go)
 >
->tpflow [https://gitee.com/ntdgg/tpflow](https://gitee.com/ntdgg/tpflow)
+>excelize [https://github.com/qax-os/excelize](https://github.com/qax-os/excelize)
 >
->gtoken [https://github.com/goflyfox/gtoken](https://github.com/goflyfox/gtoken)
->
->casbin [https://github.com/casbin/casbin](https://github.com/casbin/casbin)
->
->云捷go [https://gitee.com/yunjieg/yjgo](https://gitee.com/yunjieg/yjgo)
-## 交流QQ群
-
-> <img src="https://gitee.com/tiger1103/gfast/raw/master/public/qqcode.png"/>  
-
-> 快来加入群聊【Gfast框架交流群】(群号865697297)，发现精彩内容。
+>xorm [https://github.com/go-xorm/xorm](https://github.com/go-xorm/xorm)
 
 ## 免责声明：
-> 1、Gfast仅限自己学习使用，一切商业行为与Gfast无关。
+> 1、monkey-admin仅限自己学习使用，一切商业行为与monkey-admin无关。
 
-> 2、用户不得利用Gfast从事非法行为，用户应当合法合规的使用，发现用户在使用产品时有任何的非法行为，Gfast有权配合有关机关进行调查或向政府部门举报，Gfast不承担用户因非法行为造成的任何法律责任，一切法律责任由用户自行承担，如因用户使用造成第三方损害的，用户应当依法予以赔偿。
+> 2、用户不得利用monkey-admin从事非法行为，用户应当合法合规的使用，发现用户在使用产品时有任何的非法行为，monkey-admin有权配合有关机关进行调查或向政府部门举报，monkey-admin不承担用户因非法行为造成的任何法律责任，一切法律责任由用户自行承担，如因用户使用造成第三方损害的，用户应当依法予以赔偿。
 
-> 3、所有与使用Gfast相关的资源直接风险均由用户承担。 
+> 3、所有与使用monkey-admin相关的资源直接风险均由用户承担。 
