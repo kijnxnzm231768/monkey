@@ -114,13 +114,14 @@ func (j *JWT) CreateToken(claims CustomClaims) (string, error) {
 
 // CreateUserToken 生成含有用户信息的token
 func (j *JWT) CreateUserToken(u *response.UserResponse) (string, error) {
+	jwtConfig := config.GetJwtConfig()
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, CustomClaims{
 		UserInfo: *u,
 		StandardClaims: jwt.StandardClaims{
 			//设置一小时时效
-			ExpiresAt: time.Now().Add(1 * time.Hour).Unix(),
+			ExpiresAt: time.Now().Add(jwtConfig.TimeOut * time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
-			Issuer:    "monkey-cool",
+			Issuer:    jwtConfig.Issuer,
 		},
 	})
 	return claims.SignedString(j.SigningKey)

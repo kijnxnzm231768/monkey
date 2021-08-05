@@ -2,8 +2,10 @@ package config
 
 import (
 	"github.com/Unknwon/goconfig"
+	"github.com/druidcaesa/gotool"
 	"log"
 	"strconv"
+	"time"
 )
 
 // BUILD 开发环境
@@ -21,6 +23,11 @@ func init() {
 		log.Fatal(err)
 	}
 	return
+}
+
+type JwtConfig struct {
+	TimeOut time.Duration //超时时间
+	Issuer  string        //签证签发人
 }
 
 // FilePath 文件存储配置获取
@@ -129,4 +136,19 @@ func GetRedisCfg() (r RedisCfg) {
 func GetFilePath() (g FilePath) {
 	g.Path, _ = Cfg.GetValue("filePath", "path")
 	return g
+}
+
+func GetJwtConfig() (j JwtConfig) {
+	value, _ := Cfg.GetValue("jwt", "timeOut")
+	issuer, _ := Cfg.GetValue("jwt", "issuer")
+	if gotool.StrUtils.HasEmpty(value) {
+		value = "60"
+	}
+	if gotool.StrUtils.HasEmpty(issuer) {
+		value = "monkey-cool"
+	}
+	atoi, _ := strconv.ParseInt(value, 10, 64)
+	j.TimeOut = time.Duration(atoi / 60)
+	j.Issuer = issuer
+	return j
 }
