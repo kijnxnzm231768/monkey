@@ -28,6 +28,11 @@ go run main.go 直接访问http://localhost:8080
 
 项目为前后端分离，前端代码在monkey-ui目录下 
 
+##docker镜像构建
+[docker安装使用请参考官方](https://www.docker.com/)
+1. 根据情况修改Dockerfile文件
+2. 在项目根目录下使用命令docker build -t <你要出的进行名>:<版本号> .
+
 ## 演示图
 
 ![WX20210804-171404.png](https://i.loli.net/2021/08/04/kOY2tHZfAMTKFXQ.png)
