@@ -3,10 +3,13 @@ package v1
 import (
 	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
+	"io"
+	"monkey-admin/config"
 	"monkey-admin/models"
 	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 	"monkey-admin/pkg/excels"
+	"monkey-admin/pkg/library/user_util"
 	"monkey-admin/pkg/page"
 	"monkey-admin/pkg/resp"
 	"monkey-admin/service"
@@ -220,5 +223,96 @@ func (a UserApi) Export(c *gin.Context) {
 		file.Write(c.Writer)
 	} else {
 		c.JSON(200, resp.ErrorResp(500, "参数错误"))
+	}
+}
+
+// Profile 查询个人信息
+func (a UserApi) Profile(c *gin.Context) {
+	m := make(map[string]interface{})
+	info := user_util.GetUserInfo(c)
+	u := a.userService.GetUserById(info.UserId)
+	m["user"] = u
+	//查询所属角色组
+	m["roleGroup"] = a.roleService.SelectRolesByUserName(info.UserName)
+	m["postGroup"] = a.postService.SelectPostByUserName(info.UserName)
+	resp.OK(c, m)
+}
+
+// UpdateProfile 修改个人数据
+func (a UserApi) UpdateProfile(c *gin.Context) {
+	user := req.UserBody{}
+	if c.Bind(&user) != nil {
+		resp.ParamError(c)
+		return
+	}
+	if a.userService.CheckEmailUnique(user) != nil {
+		resp.Error(c, "修改用户'"+user.UserName+"'失败，邮箱账号已存在")
+		return
+	}
+	if a.userService.CheckPhoneNumUnique(user) != nil {
+		resp.Error(c, "修改用户'"+user.UserName+"'失败，手机号已存在")
+		return
+	}
+	if a.userService.EditProfile(user) > 0 {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
+}
+
+// UpdatePwd 修改个人密码
+func (a UserApi) UpdatePwd(c *gin.Context) {
+	oldPassword := c.Query("oldPassword")
+	newPassword := c.Query("newPassword")
+	info := user_util.GetUserInfo(c)
+	name := a.userService.GetUserByUserName(info.UserName)
+	hash := gotool.BcryptUtils.CompareHash(name.Password, oldPassword)
+	if !hash {
+		resp.Error(c, "修改密码失败，旧密码错误")
+		return
+	}
+	generate := gotool.BcryptUtils.Generate(oldPassword)
+	compareHash := gotool.BcryptUtils.CompareHash(generate, newPassword)
+	if compareHash {
+		resp.Error(c, "新密码不能与旧密码相同")
+		return
+	}
+	pwd := a.userService.UpdatePwd(info.UserId, gotool.BcryptUtils.Generate(newPassword))
+	if pwd {
+		resp.OK(c)
+	} else {
+		resp.Error(c)
+	}
+}
+
+// Avatar 修改头像
+func (a UserApi) Avatar(c *gin.Context) {
+	path := config.GetFilePath()
+	file, _, err := c.Request.FormFile("avatarfile")
+	fileName := gotool.IdUtils.IdUUIDToRan(true) + ".jpg"
+	filePath := path.Path + fileName
+	fileAppend, err := gotool.FileUtils.OpenFileAppend(filePath)
+	defer fileAppend.Close()
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		resp.Error(c)
+		return
+	}
+	_, err = io.Copy(fileAppend, file)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		resp.Error(c)
+		return
+	}
+	//进行存储
+	info := user_util.GetUserInfo(c)
+	info.Avatar = filePath
+	avatar := a.userService.UpdateAvatar(info)
+	if avatar {
+		m := make(map[string]interface{})
+		m["imgUrl"] = filePath
+		resp.OK(c, m)
+	} else {
+		resp.Error(c)
 	}
 }

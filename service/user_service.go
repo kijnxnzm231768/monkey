@@ -129,3 +129,18 @@ func (s UserService) GetAllocatedList(query req.UserQuery) ([]*response.UserResp
 func (s UserService) GetUnallocatedList(query req.UserQuery) ([]*response.UserResponse, int64) {
 	return s.userDao.GetUnallocatedList(query)
 }
+
+// EditProfile 修改数据
+func (s UserService) EditProfile(user req.UserBody) int64 {
+	return s.userDao.Update(user)
+}
+
+// UpdatePwd 修改密码
+func (s UserService) UpdatePwd(id int64, hash string) bool {
+	return s.userDao.UpdatePwd(id, hash) > 0
+}
+
+// UpdateAvatar 修改头像
+func (s UserService) UpdateAvatar(info *response.UserResponse) bool {
+	return s.userDao.UpdateAvatar(info) > 0
+}

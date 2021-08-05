@@ -33,7 +33,7 @@
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="date" />创建日期
-                <div class="pull-right">{{ user.createTime }}</div>
+                <div class="pull-right">{{ $moment(user.createTime).format("YYYY-MM-DD") }}</div>
               </li>
             </ul>
           </div>
@@ -81,9 +81,9 @@ export default {
   methods: {
     getUser() {
       getUserProfile().then(response => {
-        this.user = response.data;
-        this.roleGroup = response.roleGroup;
-        this.postGroup = response.postGroup;
+        this.user = response.data.user;
+        this.roleGroup = response.data.roleGroup;
+        this.postGroup = response.data.postGroup;
       });
     }
   }

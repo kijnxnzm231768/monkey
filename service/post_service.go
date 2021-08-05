@@ -1,6 +1,8 @@
 package service
 
 import (
+	"bytes"
+	"github.com/druidcaesa/gotool"
 	"monkey-admin/dao"
 	"monkey-admin/models"
 	"monkey-admin/models/req"
@@ -56,4 +58,20 @@ func (s PostService) Delete(ids []int64) bool {
 // Update 修改岗位数据
 func (s PostService) Update(post models.SysPost) bool {
 	return s.postDao.Update(post)
+}
+
+// SelectPostByUserName 获取岗位数据
+func (s PostService) SelectPostByUserName(name string) string {
+	list := s.postDao.SelectPostByUserName(name)
+	var buffer bytes.Buffer
+	var postName string
+	for _, post := range *list {
+		buffer.WriteString(post.PostName)
+		buffer.WriteString(",")
+	}
+	s2 := buffer.String()
+	if gotool.StrUtils.HasNotEmpty(s2) {
+		postName = s2[0:(len(s2) - 1)]
+	}
+	return postName
 }

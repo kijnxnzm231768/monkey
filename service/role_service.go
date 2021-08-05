@@ -1,6 +1,8 @@
 package service
 
 import (
+	"bytes"
+	"github.com/druidcaesa/gotool"
 	"monkey-admin/dao"
 	"monkey-admin/models"
 	"monkey-admin/models/req"
@@ -112,4 +114,20 @@ func (s RoleService) DeleteAuthUser(userRole models.SysUserRole) int64 {
 // InsertAuthUsers 批量选择用户授权
 func (s RoleService) InsertAuthUsers(body req.UserRoleBody) int64 {
 	return s.userRoleDao.InsertAuthUsers(body)
+}
+
+// SelectRolesByUserName 查询所属角色组
+func (s RoleService) SelectRolesByUserName(name string) string {
+	list := s.roleDao.SelectRolesByUserName(name)
+	var buffer bytes.Buffer
+	var roleName string
+	for _, role := range *list {
+		buffer.WriteString(role.RoleName)
+		buffer.WriteString(",")
+	}
+	s2 := buffer.String()
+	if gotool.StrUtils.HasNotEmpty(s2) {
+		roleName = s2[0:(len(s2) - 1)]
+	}
+	return roleName
 }

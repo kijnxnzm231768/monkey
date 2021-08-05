@@ -33,6 +33,6 @@ func inDisRequest() []string {
 	var req []string
 	//一下是放行的请求
 	//放行登录请求
-	req = append(req, "/remove", "/resetPwd", "/edit", "/insert", "/add", "/delete", "/export", "/import")
+	req = append(req, "/remove", "/profile/avatar", "/resetPwd", "/edit", "/insert", "/add", "/delete", "/export", "/import")
 	return req
 }

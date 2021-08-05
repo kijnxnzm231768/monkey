@@ -21,6 +21,8 @@ WORKDIR /dist
 
 #创建日志文件目录
 RUN mkdir /home/logs
+#创建文件存储目录
+RUN mkdir /home/upload
 # 将二进制文件从 /home/www/monkey-admin 目录复制到这里
 RUN cp /home/www/monkey-admin/app .
 

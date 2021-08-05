@@ -7,6 +7,7 @@ import (
 	"monkey-admin/models/req"
 	"monkey-admin/models/response"
 	"monkey-admin/pkg/page"
+	"time"
 )
 
 type UserDao struct {
@@ -215,4 +216,41 @@ func (d UserDao) GetUnallocatedList(query req.UserQuery) ([]*response.UserRespon
 		return nil, 0
 	}
 	return resp, total
+}
+
+// UpdatePwd 修改密码
+func (d UserDao) UpdatePwd(id int64, hash string) int64 {
+	user := models.SysUser{}
+	user.UserId = id
+	user.Password = hash
+	session := SqlDB.NewSession()
+	session.Begin()
+	update, err := session.Cols("password").Where("user_id = ?", id).Update(&user)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		session.Rollback()
+		return 0
+	}
+	session.Commit()
+	return update
+}
+
+// UpdateAvatar 修改头像
+func (d UserDao) UpdateAvatar(info *response.UserResponse) int64 {
+	user := models.SysUser{
+		Avatar:     info.Avatar,
+		UserId:     info.UserId,
+		UpdateBy:   info.UserName,
+		UpdateTime: time.Now(),
+	}
+	session := SqlDB.NewSession()
+	session.Begin()
+	update, err := session.Cols("avatar", "update_by", "update_time").Where("user_id = ?", user.UserId).Update(&user)
+	if err != nil {
+		session.Rollback()
+		gotool.Logs.ErrorLog().Println(err)
+		return 0
+	}
+	session.Commit()
+	return update
 }

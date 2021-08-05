@@ -7,10 +7,26 @@ import (
 )
 
 // BUILD 开发环境
-const BUILD = "prod"
+//const BUILD = "dev"
 
 //生产环境
-//const BUILD = "prod"
+const BUILD = "prod"
+
+var Cfg *goconfig.ConfigFile
+
+func init() {
+	var err error
+	Cfg, err = goconfig.LoadConfigFile("./config/config-" + BUILD + ".ini")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return
+}
+
+// FilePath 文件存储配置获取
+type FilePath struct {
+	Path string
+}
 
 // DbCfg Mysql数据库配置
 type DbCfg struct {
@@ -53,17 +69,6 @@ type MongoDb struct {
 	DB       string
 	User     string
 	Password string
-}
-
-var Cfg *goconfig.ConfigFile
-
-func init() {
-	var err error
-	Cfg, err = goconfig.LoadConfigFile("./config/config-" + BUILD + ".ini")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return
 }
 
 //读取mysql配置
@@ -118,4 +123,10 @@ func GetRedisCfg() (r RedisCfg) {
 	value, _ := Cfg.GetValue("redis", "timeout")
 	r.Timeout, _ = strconv.ParseInt(value, 10, 64)
 	return r
+}
+
+// GetFilePath 获取文件存储位置
+func GetFilePath() (g FilePath) {
+	g.Path, _ = Cfg.GetValue("filePath", "path")
+	return g
 }

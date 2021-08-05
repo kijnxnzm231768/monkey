@@ -1,9 +1,9 @@
 package file
 
 import (
-	"github.com/360EntSecGroup-Skylar/excelize/v2"
 	"github.com/druidcaesa/gotool"
 	"github.com/gin-gonic/gin"
+	"github.com/xuri/excelize/v2"
 )
 
 // DownloadExcel 公共下载execl方法

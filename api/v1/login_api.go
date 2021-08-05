@@ -29,7 +29,7 @@ func (a LoginApi) Login(c *gin.Context) {
 			m["token"] = s
 			c.JSON(200, resp.Success(m))
 		} else {
-			c.JSON(401, resp.ErrorResp(s))
+			c.JSON(200, resp.ErrorResp(s))
 		}
 	} else {
 		c.JSON(200, resp.ErrorResp(500, "参数绑定错误"))

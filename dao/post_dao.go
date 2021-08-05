@@ -137,3 +137,16 @@ func (d PostDao) Update(post models.SysPost) bool {
 	session.Commit()
 	return true
 }
+
+func (d PostDao) SelectPostByUserName(name string) *[]models.SysPost {
+	posts := make([]models.SysPost, 0)
+	session := SqlDB.NewSession().Table([]string{models.SysPost{}.TableName(), "p"})
+	err := session.Cols("p.post_id", "p.post_name", "p.post_code").
+		Join("LEFT", []string{"sys_user_post", "up"}, "up.post_id = p.post_id").
+		Join("LEFT", []string{"sys_user", "u"}, "u.user_id = up.user_id").Where("u.user_name = ?", name).Find(&posts)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &posts
+}

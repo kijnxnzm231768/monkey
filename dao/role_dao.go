@@ -190,3 +190,15 @@ func (d RoleDao) UpdateRoleStatus(role *models.SysRole) int64 {
 	session.Commit()
 	return update
 }
+
+// SelectRolesByUserName 查询角色组
+func (d RoleDao) SelectRolesByUserName(name string) *[]models.SysRole {
+	roles := make([]models.SysRole, 0)
+	session := d.sqlSelectJoin()
+	err := session.Where("r.del_flag = '0'").And("u.user_name = ?", name).Find(&roles)
+	if err != nil {
+		gotool.Logs.ErrorLog().Println(err)
+		return nil
+	}
+	return &roles
+}
