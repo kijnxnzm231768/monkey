@@ -13,6 +13,9 @@
 
  Date: 12/08/2021 17:43:10
 */
+
+
+
 drop schema if exists `monkey`;
 CREATE DATABASE `monkey` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 use monkey;
