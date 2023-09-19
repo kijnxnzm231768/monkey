@@ -19,6 +19,7 @@ func init() {
 	flag.StringVar(&mode, "mode", "debug", "server running mode, default debug mode")
 }
 
+// 程序入口
 func main() {
 	port := config.GetServerCfg().Port
 	flag.Parse()
