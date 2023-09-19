@@ -7,7 +7,7 @@ import (
 )
 
 // BUILD 开发环境
-const BUILD = "prod"
+const BUILD = "dev"
 
 //生产环境
 //const BUILD = "prod"
